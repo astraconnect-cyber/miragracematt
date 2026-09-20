@@ -1,0 +1,510 @@
+/* =========================================
+   MIRAGRACEMATT — MAIN WEBSITE STYLES
+   ========================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f6f8fc;
+  color: #111827;
+  line-height: 1.6;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.header {
+  width: 100%;
+  min-height: 70px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 7%;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0b5cff;
+}
+
+.header nav {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.header nav a {
+  text-decoration: none;
+  color: #374151;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.header nav a:hover {
+  color: #0b5cff;
+}
+
+.login-btn {
+  background: #0b5cff;
+  color: #ffffff !important;
+  padding: 11px 18px;
+  border-radius: 8px;
+}
+
+.menu-btn {
+  display: none;
+  border: none;
+  background: transparent;
+  font-size: 27px;
+  cursor: pointer;
+}
+
+
+/* =========================================
+   HERO
+   ========================================= */
+
+.hero {
+  min-height: 650px;
+  display: flex;
+  align-items: center;
+  padding: 80px 7%;
+  background:
+    linear-gradient(
+      135deg,
+      #eef4ff 0%,
+      #ffffff 55%,
+      #e9f0ff 100%
+    );
+}
+
+.hero-content {
+  max-width: 720px;
+}
+
+.small-title {
+  color: #0b5cff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.hero h1 {
+  font-size: clamp(42px, 7vw, 72px);
+  line-height: 1.05;
+  margin-bottom: 25px;
+  letter-spacing: -2px;
+}
+
+.hero h1 span {
+  display: block;
+  color: #0b5cff;
+}
+
+.hero-text {
+  max-width: 600px;
+  font-size: 19px;
+  color: #5b6472;
+  margin-bottom: 35px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.primary-btn,
+.secondary-btn {
+  display: inline-block;
+  padding: 14px 23px;
+  border-radius: 9px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.primary-btn {
+  background: #0b5cff;
+  color: #ffffff;
+}
+
+.primary-btn:hover {
+  background: #0848c9;
+  transform: translateY(-2px);
+}
+
+.secondary-btn {
+  background: #ffffff;
+  color: #0b5cff;
+  border: 1px solid #cbd5e1;
+}
+
+.secondary-btn:hover {
+  border-color: #0b5cff;
+}
+
+
+/* =========================================
+   FEATURES
+   ========================================= */
+
+.features {
+  width: 86%;
+  margin: -55px auto 70px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.feature-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
+}
+
+.icon {
+  font-size: 35px;
+  margin-bottom: 15px;
+}
+
+.feature-card h3 {
+  margin-bottom: 8px;
+  font-size: 19px;
+}
+
+.feature-card p {
+  color: #6b7280;
+}
+
+
+/* =========================================
+   GENERAL SECTIONS
+   ========================================= */
+
+.section {
+  width: 86%;
+  margin: 0 auto;
+  padding: 80px 0;
+}
+
+.section-title {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 50px;
+}
+
+.section-title p {
+  color: #0b5cff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.section-title h2 {
+  font-size: 38px;
+  margin-bottom: 12px;
+}
+
+.section-title span {
+  color: #6b7280;
+}
+
+
+/* =========================================
+   STEPS
+   ========================================= */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.step {
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+}
+
+.step-number {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0b5cff;
+  color: #ffffff;
+  border-radius: 50%;
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+
+.step h3 {
+  margin-bottom: 8px;
+}
+
+.step p {
+  color: #6b7280;
+  font-size: 15px;
+}
+
+
+/* =========================================
+   PHONES
+   ========================================= */
+
+.phones-section {
+  background: #f6f8fc;
+}
+
+.phone-placeholder {
+  max-width: 600px;
+  margin: auto;
+  background: #ffffff;
+  text-align: center;
+  padding: 50px 30px;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+}
+
+.phone-icon {
+  font-size: 55px;
+  margin-bottom: 15px;
+}
+
+.phone-placeholder h3 {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.phone-placeholder p {
+  color: #6b7280;
+  margin-bottom: 25px;
+}
+
+
+/* =========================================
+   SUPPORT
+   ========================================= */
+
+.support {
+  margin-top: 50px;
+  padding: 70px 7%;
+  background: #0b5cff;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+.support .small-title {
+  color: #ffffff;
+}
+
+.support h2 {
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.support p {
+  max-width: 650px;
+}
+
+.support-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.support-btn {
+  display: inline-block;
+  background: #ffffff;
+  color: #0b5cff;
+  padding: 13px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
+footer {
+  background: #111827;
+  color: #ffffff;
+  text-align: center;
+  padding: 45px 7%;
+}
+
+.footer-logo {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+footer > p {
+  color: #9ca3af;
+}
+
+.footer-links {
+  margin: 25px 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: #d1d5db;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.copyright {
+  font-size: 13px;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 850px) {
+
+  .header {
+    padding: 0 5%;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  .header nav {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px 5%;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  }
+
+  .header nav.active {
+    display: flex;
+  }
+
+  .header nav a {
+    padding: 12px 0;
+  }
+
+  .login-btn {
+    text-align: center;
+  }
+
+  .hero {
+    min-height: 570px;
+    padding: 70px 6%;
+  }
+
+  .hero h1 {
+    font-size: 45px;
+  }
+
+  .hero-text {
+    font-size: 17px;
+  }
+
+  .features {
+    width: 88%;
+    margin-top: -30px;
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    width: 88%;
+    padding: 60px 0;
+  }
+
+  .section-title h2 {
+    font-size: 31px;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .support {
+    padding: 55px 7%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .support h2 {
+    font-size: 32px;
+  }
+}
+
+
+/* =========================================
+   SMALL PHONES
+   ========================================= */
+
+@media (max-width: 450px) {
+
+  .logo {
+    font-size: 19px;
+  }
+
+  .hero h1 {
+    font-size: 39px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    text-align: center;
+    width: 100%;
+  }
+
+  .feature-card {
+    padding: 24px;
+  }
+
+  .phone-placeholder {
+    padding: 40px 20px;
+  }
+  }
