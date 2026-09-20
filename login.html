@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Customer Login | Miragracematt</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Miragracematt</div>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="register.html">Create Account</a>
+  </nav>
+</header>
+
+<main class="form-container">
+
+  <div class="form-card">
+
+    <h1>Customer Login</h1>
+
+    <p>
+      Login to manage your phone financing and payments.
+    </p>
+
+    <form id="loginForm">
+
+      <label for="email">Email Address</label>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="Enter your email"
+        required
+      >
+
+      <label for="password">Password</label>
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Enter your password"
+        required
+      >
+
+      <button type="submit">
+        Login
+      </button>
+
+    </form>
+
+    <p id="message"></p>
+
+    <p class="form-footer">
+      Don't have an account?
+      <a href="register.html">Create an account</a>
+    </p>
+
+  </div>
+
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+
+<script>
+
+  const firebaseApp =
+    firebase.initializeApp(firebaseConfig);
+
+  const auth = firebase.auth();
+
+  const db = firebase.firestore();
+
+  const loginForm =
+    document.getElementById("loginForm");
+
+  const message =
+    document.getElementById("message");
+
+
+  loginForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const email =
+      document.getElementById("email").value.trim();
+
+    const password =
+      document.getElementById("password").value;
+
+
+    message.textContent =
+      "Logging in...";
+
+
+    try {
+
+      const userCredential =
+        await auth.signInWithEmailAndPassword(
+          email,
+          password
+        );
+
+
+      const user =
+        userCredential.user;
+
+
+      const customerDoc =
+        await db.collection("customers")
+        .doc(user.uid)
+        .get();
+
+
+      if (!customerDoc.exists) {
+
+        message.textContent =
+          "Customer account information was not found.";
+
+        await auth.signOut();
+
+        return;
+      }
+
+
+      message.textContent =
+        "Login successful!";
+
+
+      setTimeout(function() {
+
+        window.location.href =
+          "customer-dashboard.html";
+
+      }, 800);
+
+
+    } catch (error) {
+
+      console.error(error);
+
+
+      if (
+        error.code ===
+        "auth/invalid-credential"
+      ) {
+
+        message.textContent =
+          "Incorrect email or password.";
+
+      }
+
+      else if (
+        error.code ===
+        "auth/user-not-found"
+      ) {
+
+        message.textContent =
+          "No account was found with this email.";
+
+      }
+
+      else if (
+        error.code ===
+        "auth/wrong-password"
+      ) {
+
+        message.textContent =
+          "Incorrect password.";
+
+      }
+
+      else {
+
+        message.textContent =
+          "Login failed. Please try again.";
+
+      }
+
+    }
+
+  });
+
+</script>
+
+</body>
+
+</html>
