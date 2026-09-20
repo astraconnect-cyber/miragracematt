@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Customer Dashboard | Miragracematt</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+  <div class="logo">
+    Miragracematt
+  </div>
+
+  <nav>
+    <a href="index.html">Home</a>
+
+    <button onclick="logout()">
+      Logout
+    </button>
+  </nav>
+
+</header>
+
+
+<main class="dashboard-container">
+
+  <div class="dashboard-header">
+
+    <h1>Customer Dashboard</h1>
+
+    <p id="welcomeMessage">
+      Loading your account...
+    </p>
+
+  </div>
+
+
+  <section class="dashboard-grid">
+
+
+    <div class="dashboard-card">
+
+      <h2>Account</h2>
+
+      <p>
+        <strong>Name:</strong>
+        <span id="customerName">Loading...</span>
+      </p>
+
+      <p>
+        <strong>Email:</strong>
+        <span id="customerEmail">Loading...</span>
+      </p>
+
+      <p>
+        <strong>Phone:</strong>
+        <span id="customerPhone">Loading...</span>
+      </p>
+
+      <p>
+        <strong>Account Status:</strong>
+        <span id="accountStatus">Loading...</span>
+      </p>
+
+    </div>
+
+
+
+    <div class="dashboard-card">
+
+      <h2>Financing</h2>
+
+      <p>
+        <strong>Status:</strong>
+        <span id="financingStatus">Not started</span>
+      </p>
+
+      <p>
+        <strong>Current Balance:</strong>
+        <span id="balance">₦0</span>
+      </p>
+
+      <p>
+        <strong>Next Payment:</strong>
+        <span id="nextPayment">Not available</span>
+      </p>
+
+    </div>
+
+
+
+    <div class="dashboard-card">
+
+      <h2>Application</h2>
+
+      <p id="applicationStatus">
+        You have not started a phone financing application yet.
+      </p>
+
+      <button onclick="startApplication()">
+        Apply for a Phone
+      </button>
+
+    </div>
+
+
+
+    <div class="dashboard-card">
+
+      <h2>Payments</h2>
+
+      <p>
+        Your payment history will appear here once
+        your financing account becomes active.
+      </p>
+
+      <button onclick="viewPayments()">
+        View Payments
+      </button>
+
+    </div>
+
+
+  </section>
+
+</main>
+
+
+
+<script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+
+
+<script>
+
+const firebaseApp =
+  firebase.initializeApp(firebaseConfig);
+
+const auth =
+  firebase.auth();
+
+const db =
+  firebase.firestore();
+
+
+
+auth.onAuthStateChanged(async function(user) {
+
+  if (!user) {
+
+    window.location.href =
+      "login.html";
+
+    return;
+
+  }
+
+
+  try {
+
+    const customerDoc =
+      await db.collection("customers")
+      .doc(user.uid)
+      .get();
+
+
+    if (!customerDoc.exists) {
+
+      document.getElementById("welcomeMessage")
+        .textContent =
+        "Customer profile not found.";
+
+      return;
+
+    }
+
+
+    const customer =
+      customerDoc.data();
+
+
+    document.getElementById("welcomeMessage")
+      .textContent =
+      "Welcome, " + customer.fullName;
+
+
+    document.getElementById("customerName")
+      .textContent =
+      customer.fullName || "Not provided";
+
+
+    document.getElementById("customerEmail")
+      .textContent =
+      customer.email || user.email;
+
+
+    document.getElementById("customerPhone")
+      .textContent =
+      customer.phone || "Not provided";
+
+
+    document.getElementById("accountStatus")
+      .textContent =
+      customer.accountStatus || "Active";
+
+
+    document.getElementById("financingStatus")
+      .textContent =
+      customer.financingStatus || "Not started";
+
+
+  }
+
+  catch(error) {
+
+    console.error(error);
+
+    document.getElementById("welcomeMessage")
+      .textContent =
+      "Unable to load your account.";
+
+  }
+
+});
+
+
+
+async function logout() {
+
+  try {
+
+    await auth.signOut();
+
+    window.location.href =
+      "login.html";
+
+  }
+
+  catch(error) {
+
+    console.error(error);
+
+  }
+
+}
+
+
+
+function startApplication() {
+
+  window.location.href =
+    "apply.html";
+
+}
+
+
+
+function viewPayments() {
+
+  alert(
+    "Payment history will be available when your financing account is active."
+  );
+
+}
+
+</script>
+
+</body>
+
+  </html>
