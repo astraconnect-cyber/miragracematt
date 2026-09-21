@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Admin Dashboard | Miragracematt</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">📱 Miragracematt Admin</div>
+
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <nav id="navMenu">
+    <a href="index.html">Website</a>
+    <button onclick="adminLogout()" class="login-btn">
+      Logout
+    </button>
+  </nav>
+</header>
+
+
+<section class="form-section">
+
+  <div class="form-container">
+
+    <div class="section-title">
+      <p>ADMINISTRATION</p>
+      <h2>Admin Dashboard</h2>
+      <span id="adminStatus">
+        Checking administrator access...
+      </span>
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <div id="adminLoginBox">
+
+      <h3>Admin Login</h3>
+
+      <form id="adminLoginForm">
+
+        <label>Email Address</label>
+
+        <input
+          type="email"
+          id="adminEmail"
+          required
+        >
+
+
+        <label>Password</label>
+
+        <input
+          type="password"
+          id="adminPassword"
+          required
+        >
+
+
+        <button type="submit" class="primary-btn">
+          Admin Login
+        </button>
+
+        <p id="adminMessage"></p>
+
+      </form>
+
+    </div>
+
+
+    <!-- DASHBOARD -->
+
+    <div id="adminDashboard" style="display:none;">
+
+      <div class="security-notice">
+
+        <h3>🔐 Authorized Admin Area</h3>
+
+        <p>
+          This area contains sensitive customer information.
+          Access is restricted and activity will be audited.
+        </p>
+
+      </div>
+
+
+      <h3>Customer Applications</h3>
+
+      <div id="applicationsList">
+        Loading applications...
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<footer>
+
+  <div class="footer-logo">
+    📱 Miragracematt
+  </div>
+
+  <p>
+    Flexible phone financing made simple.
+  </p>
+
+  <p class="copyright">
+    © 2026 Miragracematt. All rights reserved.
+  </p>
+
+</footer>
+
+
+<script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+<script src="script.js"></script>
+
+
+<script>
+
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+
+const loginBox =
+  document.getElementById("adminLoginBox");
+
+const dashboard =
+  document.getElementById("adminDashboard");
+
+const adminStatus =
+  document.getElementById("adminStatus");
+
+const adminMessage =
+  document.getElementById("adminMessage");
+
+
+
+/* ADMIN LOGIN */
+
+document
+  .getElementById("adminLoginForm")
+  .addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    adminMessage.textContent =
+      "Checking administrator account...";
+
+    try {
+
+      const email =
+        document.getElementById("adminEmail").value.trim();
+
+      const password =
+        document.getElementById("adminPassword").value;
+
+
+      const result =
+        await auth.signInWithEmailAndPassword(
+          email,
+          password
+        );
+
+
+      const user = result.user;
+
+
+      /*
+       * Check whether this Firebase account
+       * exists in the admins collection.
+       */
+
+      const adminDoc =
+        await db.collection("admins")
+        .doc(user.uid)
+        .get(); 
+
+
+            if (!adminDoc.exists) {
+
+        await auth.signOut();
+
+        adminMessage.textContent =
+          "❌ This account is not authorized as an administrator.";
+
+        return;
+      }
+
+
+      const adminData =
+        adminDoc.data();
+
+
+      if (adminData.status !== "active") {
+
+
+        await auth.signOut();
+
+        adminMessage.textContent =
+          "❌ This administrator account is disabled.";
+
+        return;
+      }
+
+
+      loginBox.style.display = "none";
+
+      dashboard.style.display = "block";
+
+      adminStatus.textContent =
+        "Administrator access verified.";
+
+      loadApplications();
+
+    } catch (error) {
+
+      console.error(error);
+
+      adminMessage.textContent =
+        "❌ Login failed. Check your email and password.";
+
+    }
+
+  });
+      /* LOAD APPLICATIONS */
+
+async function loadApplications() {
+
+  const list =
+    document.getElementById("applicationsList");
+
+  list.innerHTML =
+    "Loading applications...";
+
+
+  try {
+
+    const snapshot =
+      await db.collection("customerApplications")
+      .orderBy("submittedAt", "desc")
+      .get();
+
+
+    if (snapshot.empty) {
+
+      list.innerHTML =
+        "<p>No customer applications yet.</p>";
+
+      return;
+    }
+
+
+    list.innerHTML = "";
+
+
+    snapshot.forEach((doc) => {
+
+      const data = doc.data();
+
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "feature-card";
+
+
+      card.innerHTML = `
+
+        <h3>${escapeHTML(data.fullName || "Unknown Customer")}</h3>
+
+        <p>
+          <strong>Phone:</strong>
+          ${escapeHTML(data.phone || "")}
+        </p>
+
+        <p>
+          <strong>Email:</strong>
+          ${escapeHTML(data.email || "")}
+        </p>
+
+        <p>
+          <strong>School:</strong>
+          ${escapeHTML(data.school || "")}
+        </p>
+
+        <p>
+          <strong>Application:</strong>
+          ${escapeHTML(data.applicationStatus || "")}
+        </p>
+
+        <p>
+          <strong>Identity Verification:</strong>
+          ${escapeHTML(data.identityVerificationStatus || "")}
+        </p>
+
+      `;
+
+
+      list.appendChild(card);
+
+    });
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    list.innerHTML =
+      "<p>Unable to load applications.</p>";
+
+  }
+
+}
+
+
+
+/* BASIC HTML ESCAPING */
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+
+/* LOGOUT */
+
+function adminLogout() {
+
+  auth.signOut()
+    .then(() => {
+
+      window.location.href =
+        "admin.html";
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
