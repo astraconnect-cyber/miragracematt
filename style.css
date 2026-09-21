@@ -873,3 +873,188 @@ footer a {
   }
 
      }
+/* =========================================
+   MOBILE HOMEPAGE FIX
+   ========================================= */
+
+@media (max-width: 700px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 70px 20px;
+  }
+
+  .hero-content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+    line-height: 1.15;
+  }
+
+  .hero-text {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hero-buttons a {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+
+  /* FEATURES */
+
+  .features {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 30px 20px;
+    gap: 20px;
+  }
+
+  .feature-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* SECTIONS */
+
+  .section {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 60px 20px;
+  }
+
+  .section-title {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .section-title h2 {
+    font-size: 30px;
+  }
+
+
+  /* STEPS */
+
+  .steps {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100%;
+    box-sizing: border-box;
+    gap: 20px;
+  }
+
+  .step {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* PHONES */
+
+  .phones-section {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .phone-placeholder {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* SUPPORT */
+
+  .support {
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 50px 20px;
+    gap: 25px;
+  }
+
+  .support-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .support-btn {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+
+  /* NAVIGATION */
+
+  header {
+    position: relative;
+  }
+
+  .menu-btn {
+    display: block !important;
+    position: relative;
+    z-index: 1001;
+  }
+
+  header nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    flex-direction: column;
+    padding: 15px;
+    gap: 10px;
+    z-index: 1000;
+  }
+
+  header nav.active {
+    display: flex !important;
+  }
+
+  header nav a,
+  header nav .login-btn {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+
+  /* FOOTER */
+
+  footer {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+   }
