@@ -298,43 +298,22 @@ document
         "Admin data:",
         adminData
       );
+      
 
+    // VERIFY ADMIN STATUS
+const adminStatus = String(adminData["status"] || "")
+  .trim()
+  .toLowerCase();
 
-      /*
-       * READ STATUS SAFELY
-       */
+if (adminStatus !== "active") {
+  await auth.signOut();
 
-      const status =
-        adminData.status !== undefined &&
-        adminData.status !== null
-          ? String(adminData.status)
-              .trim()
-              .toLowerCase()
-          : "";
+  adminMessage.textContent =
+    "❌ Admin account is not active. Firebase reports: " +
+    (adminStatus || "missing");
 
-
-      console.log(
-        "Admin status:",
-        status
-      );
-
-
-      /*
-       * ADMIN MUST BE ACTIVE
-       */
-
-      if (status !== "active") {
-
-        await auth.signOut();
-
-        adminMessage.textContent =
-          "❌ Admin account is not active. " +
-          "Firebase currently reports status: " +
-          (status || "missing");
-
-        return;
-      }
-
+  return;
+}
 
       /*
        * LOGIN SUCCESS
