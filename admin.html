@@ -6,22 +6,34 @@
 
   <title>Admin Dashboard | Miragracematt</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 
 <body>
 
 <header class="header">
-  <div class="logo">📱 Miragracematt Admin</div>
+
+  <div class="logo">
+    📱 Miragracematt Admin
+  </div>
 
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
   <nav id="navMenu">
-    <a href="index.html">Website</a>
-    <button onclick="adminLogout()" class="login-btn">
+
+    <a href="index.html">
+      Website
+    </a>
+
+    <button
+      onclick="adminLogout()"
+      class="login-btn"
+    >
       Logout
     </button>
+
   </nav>
+
 </header>
 
 
@@ -30,15 +42,19 @@
   <div class="form-container">
 
     <div class="section-title">
+
       <p>ADMINISTRATION</p>
+
       <h2>Admin Dashboard</h2>
+
       <span id="adminStatus">
         Checking administrator access...
       </span>
+
     </div>
 
 
-    <!-- LOGIN -->
+    <!-- ADMIN LOGIN -->
 
     <div id="adminLoginBox">
 
@@ -51,7 +67,9 @@
         <input
           type="email"
           id="adminEmail"
+          name="adminEmail"
           required
+          autocomplete="username"
         >
 
 
@@ -60,11 +78,16 @@
         <input
           type="password"
           id="adminPassword"
+          name="adminPassword"
           required
+          autocomplete="current-password"
         >
 
 
-        <button type="submit" class="primary-btn">
+        <button
+          type="submit"
+          class="primary-btn"
+        >
           Admin Login
         </button>
 
@@ -75,13 +98,18 @@
     </div>
 
 
-    <!-- DASHBOARD -->
+    <!-- ADMIN DASHBOARD -->
 
-    <div id="adminDashboard" style="display:none;">
+    <div
+      id="adminDashboard"
+      style="display:none;"
+    >
 
       <div class="security-notice">
 
-        <h3>🔐 Authorized Admin Area</h3>
+        <h3>
+          🔐 Authorized Admin Area
+        </h3>
 
         <p>
           This area contains sensitive customer information.
@@ -91,7 +119,10 @@
       </div>
 
 
-      <h3>Customer Applications</h3>
+      <h3>
+        Customer Applications
+      </h3>
+
 
       <div id="applicationsList">
         Loading applications...
@@ -121,20 +152,29 @@
 </footer>
 
 
+<!-- FIREBASE -->
+
 <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore-compat.js"></script>
 
 <script src="firebase-config.js"></script>
+
 <script src="script.js"></script>
 
 
 <script>
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+const firebaseApp =
+  firebase.initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+const auth =
+  firebase.auth();
+
+const db =
+  firebase.firestore();
 
 
 const loginBox =
@@ -149,7 +189,11 @@ const adminStatus =
 const adminMessage =
   document.getElementById("adminMessage");
 
-/* ADMIN LOGIN */
+
+
+/* =========================
+   ADMIN LOGIN
+========================= */
 
 document
   .getElementById("adminLoginForm")
@@ -157,40 +201,34 @@ document
 
     event.preventDefault();
 
-    const form = event.target;
-
-    const emailInput = form.elements["adminEmail"];
-    const passwordInput = form.elements["adminPassword"];
-    const message = document.getElementById("adminMessage");
-
-    if (!emailInput || !passwordInput || !message) {
-      console.error("Admin login form elements are missing.");
-
-      if (message) {
-        message.textContent =
-          "❌ Login form error. Please refresh the page.";
-      }
-
-      return;
-    }
-
-    message.textContent =
+    adminMessage.textContent =
       "Checking administrator account...";
+
 
     try {
 
       const email =
-        emailInput.value.trim();
+        document
+          .getElementById("adminEmail")
+          .value
+          .trim();
 
       const password =
-        passwordInput.value;
+        document
+          .getElementById("adminPassword")
+          .value;
+
 
       if (!email || !password) {
-        message.textContent =
+
+        adminMessage.textContent =
           "❌ Enter your email and password.";
 
         return;
       }
+
+
+      /* FIREBASE AUTH LOGIN */
 
       const result =
         await auth.signInWithEmailAndPassword(
@@ -198,78 +236,198 @@ document
           password
         );
 
-      const user = result.user;
 
-      console.log("Firebase login successful.");
-      console.log("Admin UID:", user.uid);
+      const user =
+        result.user;
+
+
+      console.log(
+        "Firebase login successful."
+      );
+
+      console.log(
+        "Logged-in email:",
+        user.email
+      );
+
+      console.log(
+        "Logged-in UID:",
+        user.uid
+      );
+
+
+      /*
+       * ADMIN DOCUMENT
+       *
+       * The document ID must equal
+       * the Firebase Authentication UID.
+       */
+
+      const adminRef =
+        db
+          .collection("admins")
+          .doc(user.uid);
+
 
       const adminDoc =
-        await db.collection("admins")
-          .doc(user.uid)
-          .get();
+        await adminRef.get();
+
+
+      console.log(
+        "Admin document exists:",
+        adminDoc.exists
+      );
+
 
       if (!adminDoc.exists) {
 
         await auth.signOut();
 
-        message.textContent =
-          "❌ This account is not authorized as an administrator.";
+        adminMessage.textContent =
+          "❌ No administrator record was found for this account.";
 
         return;
       }
+
 
       const adminData =
         adminDoc.data();
 
-      console.log("Admin record:", adminData);
 
-      const adminStatusValue =
-        String(adminData.status || "")
-          .trim()
-          .toLowerCase();
+      console.log(
+        "Admin data:",
+        adminData
+      );
 
-      if (adminStatusValue !== "active") {
+
+      /*
+       * READ STATUS SAFELY
+       */
+
+      const status =
+        adminData.status !== undefined &&
+        adminData.status !== null
+          ? String(adminData.status)
+              .trim()
+              .toLowerCase()
+          : "";
+
+
+      console.log(
+        "Admin status:",
+        status
+      );
+
+
+      /*
+       * ADMIN MUST BE ACTIVE
+       */
+
+      if (status !== "active") {
 
         await auth.signOut();
 
-        message.textContent =
-          "❌ Admin account is not active. Current status: " +
-          (adminData.status || "missing");
+        adminMessage.textContent =
+          "❌ Admin account is not active. " +
+          "Firebase currently reports status: " +
+          (status || "missing");
 
         return;
       }
 
-      loginBox.style.display = "none";
 
-      dashboard.style.display = "block";
+      /*
+       * LOGIN SUCCESS
+       */
+
+      loginBox.style.display =
+        "none";
+
+      dashboard.style.display =
+        "block";
 
       adminStatus.textContent =
         "Administrator access verified.";
 
+      adminStatus.style.color =
+        "green";
+
+
       await loadApplications();
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.error(
         "ADMIN LOGIN ERROR:",
         error
       );
 
-      message.textContent =
-        "❌ Error: " +
-        (error.code || "unknown") +
-        " — " +
-        (error.message || "Unknown error.");
+
+      let message =
+        "Login failed.";
+
+
+      if (error.code === "auth/invalid-credential") {
+
+        message =
+          "❌ Incorrect email or password.";
+
+      }
+
+      else if (error.code === "auth/user-not-found") {
+
+        message =
+          "❌ This admin email does not exist in Firebase Authentication.";
+
+      }
+
+      else if (error.code === "auth/wrong-password") {
+
+        message =
+          "❌ Incorrect password.";
+
+      }
+
+      else if (error.code === "permission-denied") {
+
+        message =
+          "❌ Firestore permission denied. Your Firebase rules are blocking the admin record.";
+
+      }
+
+      else {
+
+        message =
+          "❌ Error: " +
+          (error.code || "unknown") +
+          " — " +
+          (error.message || "Unknown error.");
+
+      }
+
+
+      adminMessage.textContent =
+        message;
 
     }
 
   });
-      /* LOAD APPLICATIONS */
+
+
+
+/* =========================
+   LOAD APPLICATIONS
+========================= */
 
 async function loadApplications() {
 
   const list =
-    document.getElementById("applicationsList");
+    document.getElementById(
+      "applicationsList"
+    );
+
 
   list.innerHTML =
     "Loading applications...";
@@ -278,9 +436,13 @@ async function loadApplications() {
   try {
 
     const snapshot =
-      await db.collection("customerApplications")
-      .orderBy("submittedAt", "desc")
-      .get();
+      await db
+        .collection("customerApplications")
+        .orderBy(
+          "submittedAt",
+          "desc"
+        )
+        .get();
 
 
     if (snapshot.empty) {
@@ -292,16 +454,19 @@ async function loadApplications() {
     }
 
 
-    list.innerHTML = "";
+    list.innerHTML =
+      "";
 
 
-    snapshot.forEach((doc) => {
+    snapshot.forEach(function(doc) {
 
-      const data = doc.data();
+      const data =
+        doc.data();
 
 
       const card =
         document.createElement("div");
+
 
       card.className =
         "feature-card";
@@ -309,31 +474,46 @@ async function loadApplications() {
 
       card.innerHTML = `
 
-        <h3>${escapeHTML(data.fullName || "Unknown Customer")}</h3>
+        <h3>
+          ${escapeHTML(
+            data.fullName ||
+            "Unknown Customer"
+          )}
+        </h3>
 
         <p>
           <strong>Phone:</strong>
-          ${escapeHTML(data.phone || "")}
+          ${escapeHTML(
+            data.phone || ""
+          )}
         </p>
 
         <p>
           <strong>Email:</strong>
-          ${escapeHTML(data.email || "")}
+          ${escapeHTML(
+            data.email || ""
+          )}
         </p>
 
         <p>
           <strong>School:</strong>
-          ${escapeHTML(data.school || "")}
+          ${escapeHTML(
+            data.school || ""
+          )}
         </p>
 
         <p>
           <strong>Application:</strong>
-          ${escapeHTML(data.applicationStatus || "")}
+          ${escapeHTML(
+            data.applicationStatus || ""
+          )}
         </p>
 
         <p>
           <strong>Identity Verification:</strong>
-          ${escapeHTML(data.identityVerificationStatus || "")}
+          ${escapeHTML(
+            data.identityVerificationStatus || ""
+          )}
         </p>
 
       `;
@@ -343,10 +523,15 @@ async function loadApplications() {
 
     });
 
+  }
 
-  } catch (error) {
+  catch (error) {
 
-    console.error(error);
+    console.error(
+      "APPLICATION ERROR:",
+      error
+    );
+
 
     list.innerHTML =
       "<p>Unable to load applications.</p>";
@@ -357,27 +542,52 @@ async function loadApplications() {
 
 
 
-/* BASIC HTML ESCAPING */
+/* =========================
+   HTML SECURITY
+========================= */
 
 function escapeHTML(value) {
 
   return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
 
 
-/* LOGOUT */
+/* =========================
+   LOGOUT
+========================= */
 
 function adminLogout() {
 
-  auth.signOut()
-    .then(() => {
+  auth
+    .signOut()
+    .then(function() {
 
       window.location.href =
         "admin.html";
@@ -389,4 +599,4 @@ function adminLogout() {
 </script>
 
 </body>
-</html>
+  </html>
