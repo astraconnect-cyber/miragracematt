@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Admin Dashboard | Miragracematt</title>
 
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=11">
 </head>
 
 <body>
@@ -72,7 +73,6 @@
           autocomplete="username"
         >
 
-
         <label>Password</label>
 
         <input
@@ -82,7 +82,6 @@
           required
           autocomplete="current-password"
         >
-
 
         <button
           type="submit"
@@ -177,18 +176,21 @@ const db =
   firebase.firestore();
 
 
+/* =========================
+   PAGE ELEMENTS
+========================= */
+
 const loginBox =
   document.getElementById("adminLoginBox");
 
 const dashboard =
   document.getElementById("adminDashboard");
 
-const adminStatus =
+const adminStatusElement =
   document.getElementById("adminStatus");
 
 const adminMessage =
   document.getElementById("adminMessage");
-
 
 
 /* =========================
@@ -228,7 +230,9 @@ document
       }
 
 
-      /* FIREBASE AUTH LOGIN */
+      /* =========================
+         FIREBASE AUTH LOGIN
+      ========================= */
 
       const result =
         await auth.signInWithEmailAndPassword(
@@ -241,42 +245,15 @@ document
         result.user;
 
 
-      console.log(
-        "Firebase login successful."
-      );
-
-      console.log(
-        "Logged-in email:",
-        user.email
-      );
-
-      console.log(
-        "Logged-in UID:",
-        user.uid
-      );
-
-
-      /*
-       * ADMIN DOCUMENT
-       *
-       * The document ID must equal
-       * the Firebase Authentication UID.
-       */
-
-      const adminRef =
-        db
-          .collection("admins")
-          .doc(user.uid);
-
+      /* =========================
+         GET ADMIN DOCUMENT
+      ========================= */
 
       const adminDoc =
-        await adminRef.get();
-
-
-      console.log(
-        "Admin document exists:",
-        adminDoc.exists
-      );
+        await db
+          .collection("admins")
+          .doc(user.uid)
+          .get();
 
 
       if (!adminDoc.exists) {
@@ -290,34 +267,50 @@ document
       }
 
 
+      /* =========================
+         READ ADMIN DATA
+      ========================= */
+
       const adminData =
         adminDoc.data();
-      alert("ADMIN DATA RECEIVED:\n" + JSON.stringify(adminData, null, 2)); 
-     
-      console.log(
-        "Admin data:",
-        adminData
-      );
-      
 
-    // VERIFY ADMIN STATUS
-const adminStatus = String(adminData["status"] || "")
-  .trim()
-  .toLowerCase();
-
-if (adminStatus !== "active") {
-  await auth.signOut();
-
-  adminMessage.textContent =
-    "❌ Admin account is not active. Firebase reports: " +
-    (adminStatus || "missing");
-
-  return;
-}
 
       /*
-       * LOGIN SUCCESS
+       * IMPORTANT:
+       * Firebase has already confirmed
+       * that this document contains:
+       *
+       * status: active
        */
+
+      const currentAdminStatus =
+        String(
+          adminData.status || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+      /* =========================
+         CHECK ADMIN STATUS
+      ========================= */
+
+      if (currentAdminStatus !== "active") {
+
+        await auth.signOut();
+
+        adminMessage.textContent =
+          "❌ Admin account is not active. " +
+          "Firebase reports: " +
+          (currentAdminStatus || "missing");
+
+        return;
+      }
+
+
+      /* =========================
+         LOGIN SUCCESS
+      ========================= */
 
       loginBox.style.display =
         "none";
@@ -325,12 +318,21 @@ if (adminStatus !== "active") {
       dashboard.style.display =
         "block";
 
-      adminStatus.textContent =
+
+      adminStatusElement.textContent =
         "Administrator access verified.";
 
-      adminStatus.style.color =
+      adminStatusElement.style.color =
         "green";
 
+
+      adminMessage.textContent =
+        "";
+
+
+      /* =========================
+         LOAD APPLICATIONS
+      ========================= */
 
       await loadApplications();
 
@@ -348,28 +350,40 @@ if (adminStatus !== "active") {
         "Login failed.";
 
 
-      if (error.code === "auth/invalid-credential") {
+      if (
+        error.code ===
+        "auth/invalid-credential"
+      ) {
 
         message =
           "❌ Incorrect email or password.";
 
       }
 
-      else if (error.code === "auth/user-not-found") {
+      else if (
+        error.code ===
+        "auth/user-not-found"
+      ) {
 
         message =
           "❌ This admin email does not exist in Firebase Authentication.";
 
       }
 
-      else if (error.code === "auth/wrong-password") {
+      else if (
+        error.code ===
+        "auth/wrong-password"
+      ) {
 
         message =
           "❌ Incorrect password.";
 
       }
 
-      else if (error.code === "permission-denied") {
+      else if (
+        error.code ===
+        "permission-denied"
+      ) {
 
         message =
           "❌ Firestore permission denied. Your Firebase rules are blocking the admin record.";
@@ -393,7 +407,6 @@ if (adminStatus !== "active") {
     }
 
   });
-
 
 
 /* =========================
@@ -520,7 +533,6 @@ async function loadApplications() {
 }
 
 
-
 /* =========================
    HTML SECURITY
 ========================= */
@@ -557,7 +569,6 @@ function escapeHTML(value) {
 }
 
 
-
 /* =========================
    LOGOUT
 ========================= */
@@ -578,4 +589,5 @@ function adminLogout() {
 </script>
 
 </body>
-  </html>
+
+        </html>
