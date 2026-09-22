@@ -234,15 +234,13 @@ if (adminStatusValue !== "active") {
 
       loadApplications();
 
-    } catch (error) {
+} catch (error) {
 
-      console.error(error);
+  console.error("ADMIN LOGIN ERROR:", error);
 
-      adminMessage.textContent =
-        "❌ Login failed. Check your email and password.";
-
-    }
-
+  adminMessage.textContent =
+    "❌ Error: " + error.code + " — " + error.message;
+  }
   });
       /* LOAD APPLICATIONS */
 
