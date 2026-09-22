@@ -207,16 +207,22 @@ document
         adminDoc.data();
 
 
-      if (adminData.status !== "active") {
+      const adminStatusValue =
+  String(adminData.status || "").trim().toLowerCase();
 
+console.log("Admin document:", adminData);
+console.log("Admin status:", adminStatusValue);
 
-        await auth.signOut();
+if (adminStatusValue !== "active") {
 
-        adminMessage.textContent =
-          "❌ This administrator account is disabled.";
+  await auth.signOut();
 
-        return;
-      }
+  adminMessage.textContent =
+    "❌ Admin account is not active. Current status: " +
+    (adminData.status || "missing");
+
+  return;
+}
 
 
       loginBox.style.display = "none";
