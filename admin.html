@@ -149,8 +149,6 @@ const adminStatus =
 const adminMessage =
   document.getElementById("adminMessage");
 
-
-
 /* ADMIN LOGIN */
 
 document
@@ -159,17 +157,40 @@ document
 
     event.preventDefault();
 
-    adminMessage.textContent =
+    const form = event.target;
+
+    const emailInput = form.elements["adminEmail"];
+    const passwordInput = form.elements["adminPassword"];
+    const message = document.getElementById("adminMessage");
+
+    if (!emailInput || !passwordInput || !message) {
+      console.error("Admin login form elements are missing.");
+
+      if (message) {
+        message.textContent =
+          "❌ Login form error. Please refresh the page.";
+      }
+
+      return;
+    }
+
+    message.textContent =
       "Checking administrator account...";
 
     try {
 
       const email =
-        document.getElementById("adminemail").value.trim();
+        emailInput.value.trim();
 
       const password =
-        document.getElementById("adminPassword").value;
+        passwordInput.value;
 
+      if (!email || !password) {
+        message.textContent =
+          "❌ Enter your email and password.";
+
+        return;
+      }
 
       const result =
         await auth.signInWithEmailAndPassword(
@@ -177,53 +198,46 @@ document
           password
         );
 
-
       const user = result.user;
 
-
-      /*
-       * Check whether this Firebase account
-       * exists in the admins collection.
-       */
+      console.log("Firebase login successful.");
+      console.log("Admin UID:", user.uid);
 
       const adminDoc =
         await db.collection("admins")
-        .doc(user.uid)
-        .get(); 
+          .doc(user.uid)
+          .get();
 
-
-            if (!adminDoc.exists) {
+      if (!adminDoc.exists) {
 
         await auth.signOut();
 
-        adminMessage.textContent =
+        message.textContent =
           "❌ This account is not authorized as an administrator.";
 
         return;
       }
 
-
       const adminData =
         adminDoc.data();
 
+      console.log("Admin record:", adminData);
 
       const adminStatusValue =
-  String(adminData.status || "").trim().toLowerCase();
+        String(adminData.status || "")
+          .trim()
+          .toLowerCase();
 
-console.log("Admin document:", adminData);
-console.log("Admin status:", adminStatusValue);
+      if (adminStatusValue !== "active") {
 
-if (adminStatusValue !== "active") {
+        await auth.signOut();
 
-  await auth.signOut();
+        message.textContent =
+          "❌ Admin account is not active. Current status: " +
+          (adminData.status || "missing");
 
-  adminMessage.textContent =
-    "❌ Admin account is not active. Current status: " +
-    (adminData.status || "missing");
-
-  return;
-}
-
+        return;
+      }
 
       loginBox.style.display = "none";
 
@@ -232,15 +246,23 @@ if (adminStatusValue !== "active") {
       adminStatus.textContent =
         "Administrator access verified.";
 
-      loadApplications();
+      await loadApplications();
 
-} catch (error) {
+    } catch (error) {
 
-  console.error("ADMIN LOGIN ERROR:", error);
+      console.error(
+        "ADMIN LOGIN ERROR:",
+        error
+      );
 
-  adminMessage.textContent =
-    "❌ Error: " + error.code + " — " + error.message;
-  }
+      message.textContent =
+        "❌ Error: " +
+        (error.code || "unknown") +
+        " — " +
+        (error.message || "Unknown error.");
+
+    }
+
   });
       /* LOAD APPLICATIONS */
 
