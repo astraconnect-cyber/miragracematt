@@ -1,7 +1,3 @@
-/* =========================================
-   MIRAGRACEMATT — COMPLETE WEBSITE DESIGN
-   ========================================= */
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,582 +5,211 @@
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
   background: #f4f7fb;
   color: #172033;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 a {
   text-decoration: none;
+  color: inherit;
 }
 
+/* HEADER */
 
-/* =========================================
-   HEADER
-   ========================================= */
-
-header {
+.header {
+  width: 100%;
+  min-height: 70px;
   background: #0b5cff;
   color: white;
-  padding: 18px 6%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+  padding: 15px 5%;
   position: relative;
-  z-index: 10;
+  z-index: 1000;
 }
 
 .logo {
   font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
+  font-weight: bold;
 }
 
-nav {
+header nav {
   display: flex;
   align-items: center;
-  gap: 22px;
-}
-
-nav a {
-  color: white;
-  font-weight: 600;
-}
-
-nav a:hover {
-  opacity: 0.8;
-}
-
-nav button {
-  background: white;
-  color: #0b5cff;
-  border: none;
-  padding: 9px 16px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-
-/* =========================================
-   HERO
-   ========================================= */
-
-.hero {
-  padding: 80px 6%;
-  text-align: center;
-  background: linear-gradient(135deg, #0b5cff, #0646c7);
-  color: white;
-}
-
-.hero h1 {
-  font-size: 44px;
-  margin-bottom: 18px;
-}
-
-.hero p {
-  max-width: 650px;
-  margin: 0 auto;
-  font-size: 18px;
-}
-
-.hero button {
-  margin-top: 25px;
-  padding: 13px 24px;
-  border: none;
-  border-radius: 8px;
-  background: white;
-  color: #0b5cff;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-
-/* =========================================
-   GENERAL SECTIONS
-   ========================================= */
-
-section {
-  padding: 55px 6%;
-}
-
-section h2 {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-
-/* =========================================
-   BUTTONS
-   ========================================= */
-
-button {
-  font-family: inherit;
-}
-
-.primary-btn,
-.cta-btn,
-.hero button {
-  display: inline-block;
-  background: #0b5cff;
-  color: white;
-  border: none;
-  padding: 13px 24px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.primary-btn:hover,
-.cta-btn:hover {
-  background: #0646c7;
-  transform: translateY(-1px);
-}
-
-
-/* =========================================
-   SERVICE CARDS
-   ========================================= */
-
-.service-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 
-.service-card {
-  background: white;
-  padding: 25px;
-  border-radius: 14px;
-  border: 1px solid #e1e6ef;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-  transition: 0.2s;
-}
-
-.service-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.09);
-}
-
-.service-card h3 {
-  color: #0b5cff;
-  margin-bottom: 10px;
-}
-
-
-/* =========================================
-   FEATURE CARDS
-   ========================================= */
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-}
-
-.feature-card {
-  background: white;
-  padding: 25px;
-  border-radius: 14px;
-  border: 1px solid #e1e6ef;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-}
-
-.feature-card h3 {
-  margin-bottom: 10px;
-  color: #0b5cff;
-}
-
-
-/* =========================================
-   FORM PAGES
-   ========================================= */
-
-.form-container {
-  min-height: calc(100vh - 75px);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 45px 20px;
-}
-
-.form-card {
-  width: 100%;
-  max-width: 500px;
-  background: white;
-  padding: 35px;
-  border-radius: 18px;
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.09);
-  border: 1px solid #e5eaf2;
-}
-
-.form-card h1 {
-  text-align: center;
-  font-size: 30px;
-  margin-bottom: 10px;
-  color: #172033;
-}
-
-.form-card > p:first-of-type {
-  text-align: center;
-  color: #687386;
-  margin-bottom: 28px;
-}
-
-.form-card form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-card label {
-  margin-top: 15px;
-  margin-bottom: 7px;
-  font-weight: 600;
-  color: #26344d;
-}
-
-.form-card input,
-.form-card select,
-.form-card textarea {
-  width: 100%;
-  padding: 13px 14px;
-  border: 1px solid #d5dce8;
-  border-radius: 9px;
-  background: #fafbfd;
-  font-size: 15px;
-  outline: none;
-  transition: 0.2s;
-}
-
-.form-card input:focus,
-.form-card select:focus,
-.form-card textarea:focus {
-  border-color: #0b5cff;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(11, 92, 255, 0.1);
-}
-
-.form-card button {
-  width: 100%;
-  margin-top: 25px;
-  padding: 14px;
-  border: none;
-  border-radius: 9px;
-  background: #0b5cff;
+header nav a {
   color: white;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.form-card button:hover {
-  background: #0646c7;
-  transform: translateY(-1px);
-}
-
-#message {
-  text-align: center;
-  margin-top: 18px;
   font-weight: 600;
 }
 
-.form-footer {
-  margin-top: 22px;
-  text-align: center;
-  color: #687386;
-}
-
-.form-footer a {
-  color: #0b5cff;
-  font-weight: 600;
-}
-
-
-/* =========================================
-   CUSTOMER DASHBOARD
-   ========================================= */
-
-.dashboard-container {
-  max-width: 1150px;
-  margin: auto;
-  padding: 40px 20px;
-}
-
-.dashboard-header {
-  margin-bottom: 30px;
-}
-
-.dashboard-header h1 {
-  font-size: 32px;
-  margin-bottom: 5px;
-}
-
-.dashboard-header p {
-  color: #687386;
-}
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
-}
-
-.dashboard-card {
+.login-btn {
   background: white;
-  padding: 26px;
-  border-radius: 16px;
-  border: 1px solid #e2e7ef;
-  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.06);
-}
-
-.dashboard-card h2 {
-  margin-bottom: 18px;
-  color: #0b5cff;
-  font-size: 20px;
-}
-
-.dashboard-card p {
-  margin: 10px 0;
-  color: #536176;
-}
-
-.dashboard-card strong {
-  color: #172033;
-}
-
-.dashboard-card button {
-  margin-top: 15px;
-  padding: 11px 18px;
-  border: none;
+  color: #0b5cff !important;
+  padding: 10px 16px;
   border-radius: 8px;
-  background: #0b5cff;
-  color: white;
-  font-weight: 600;
+  font-weight: bold;
+  border: none;
   cursor: pointer;
 }
 
-
-/* =========================================
-   FOOTER
-   ========================================= */
-
-footer {
-  background: #101828;
-  color: white;
-  text-align: center;
-  padding: 30px 20px;
-  margin-top: 50px;
-}
-
-footer a {
-  color: white;
-}
-
-
-/* =========================================
-   MOBILE
-   ========================================= */
-
-@media (max-width: 700px) {
-
-  header {
-    padding: 16px 20px;
-  }
-
-  nav {
-    gap: 10px;
-  }
-
-  nav a {
-    font-size: 13px;
-  }
-
-  .hero {
-    padding: 60px 20px;
-  }
-
-  .hero h1 {
-    font-size: 32px;
-  }
-
-  .hero p {
-    font-size: 16px;
-  }
-
-  section {
-    padding: 40px 20px;
-  }
-
-  .service-grid,
-  .features-grid,
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-container {
-    padding: 25px 15px;
-  }
-
-  .form-card {
-    padding: 25px 20px;
-    border-radius: 14px;
-  }
-
-  .form-card h1 {
-    font-size: 25px;
-  }
-
-  .dashboard-container {
-    padding: 25px 15px;
-  }
-
-  .dashboard-header h1 {
-    font-size: 27px;
-  }
-
-   }
-/* =========================================
-   MIRAGRACEMATT HOMEPAGE EXTRA DESIGN
-   ========================================= */
-
-/* MOBILE MENU BUTTON */
 .menu-btn {
   display: none;
   background: white;
   color: #0b5cff;
   border: none;
-  font-size: 25px;
-  padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: 7px;
+  padding: 8px 11px;
+  font-size: 20px;
   cursor: pointer;
 }
 
+/* HERO */
 
-/* HERO EXTRA DESIGN */
+.hero {
+  width: 100%;
+  min-height: 600px;
+  background: #0b5cff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+}
 
 .hero-content {
-  max-width: 850px;
-  margin: auto;
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
 }
 
 .small-title {
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: bold;
   letter-spacing: 1px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
-.hero-text {
-  margin: 20px auto 0;
+.hero h1 {
+  font-size: 52px;
+  line-height: 1.15;
+  margin-bottom: 20px;
 }
 
 .hero h1 span {
-  display: inline;
+  display: block;
+}
+
+.hero-text {
+  max-width: 650px;
+  margin: 0 auto 30px;
+  font-size: 18px;
 }
 
 .hero-buttons {
-  margin-top: 28px;
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: 15px;
   flex-wrap: wrap;
 }
 
-.secondary-btn {
+/* BUTTONS */
+
+.primary-btn,
+.secondary-btn,
+.support-btn {
   display: inline-block;
-  background: white;
-  color: #0b5cff;
-  padding: 13px 24px;
+  padding: 13px 20px;
   border-radius: 8px;
-  font-weight: 700;
-  border: 2px solid white;
-  transition: 0.2s;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  text-align: center;
 }
 
-.secondary-btn:hover {
-  background: transparent;
+.primary-btn {
+  background: #0b5cff;
   color: white;
 }
 
+.secondary-btn {
+  background: white;
+  color: #0b5cff;
+}
 
-/* =========================================
-   FEATURES
-   ========================================= */
+.hero .primary-btn {
+  background: white;
+  color: #0b5cff;
+}
+
+/* FEATURES */
 
 .features {
-  padding: 55px 6%;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 20px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
-  background: #f4f7fb;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
 }
 
-.features .feature-card {
+.feature-card {
   background: white;
-  padding: 30px;
-  border-radius: 16px;
-  border: 1px solid #e1e6ef;
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06);
-  transition: 0.2s;
-}
-
-.features .feature-card:hover {
-  transform: translateY(-4px);
-}
-
-.feature-card .icon {
-  font-size: 28px;
-  margin-bottom: 12px;
+  border-radius: 12px;
+  padding: 30px 25px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
 }
 
 .feature-card h3 {
+  margin: 12px 0;
   color: #0b5cff;
-  font-size: 20px;
-  margin-bottom: 10px;
 }
 
-.feature-card p {
-  color: #536176;
+.icon {
+  font-size: 30px;
 }
 
-
-/* =========================================
-   HOW IT WORKS
-   ========================================= */
+/* GENERAL SECTIONS */
 
 .section {
-  padding: 70px 6%;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
 }
 
 .section-title {
   text-align: center;
   max-width: 700px;
-  margin: 0 auto 40px;
+  margin: 0 auto 45px;
 }
 
-.section-title > p {
+.section-title p {
   color: #0b5cff;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: bold;
   letter-spacing: 1px;
-  margin-bottom: 8px;
 }
 
 .section-title h2 {
-  font-size: 32px;
-  margin-bottom: 8px;
+  font-size: 36px;
+  margin: 10px 0;
 }
 
 .section-title span {
-  color: #687386;
+  color: #657080;
 }
 
+/* STEPS */
+
 .steps {
-  max-width: 1100px;
-  margin: auto;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
@@ -592,135 +217,108 @@ footer a {
 
 .step {
   background: white;
-  padding: 25px;
-  border-radius: 15px;
-  border: 1px solid #e1e6ef;
+  border-radius: 12px;
+  padding: 30px 20px;
   text-align: center;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
 }
 
 .step-number {
-  width: 45px;
-  height: 45px;
-  margin: 0 auto 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #0b5cff;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0b5cff;
-  color: white;
-  border-radius: 50%;
-  font-weight: 700;
-  font-size: 18px;
+  margin: 0 auto 15px;
+  font-weight: bold;
 }
 
-.step h3 {
-  margin-bottom: 8px;
-}
-
-.step p {
-  color: #687386;
-}
-
-
-/* =========================================
-   PHONES
-   ========================================= */
+/* PHONES */
 
 .phones-section {
-  background: #f4f7fb;
+  width: 100%;
 }
 
 .phone-placeholder {
-  max-width: 650px;
+  width: 100%;
+  max-width: 600px;
   margin: auto;
   background: white;
-  padding: 40px 30px;
+  padding: 45px 25px;
+  border-radius: 15px;
   text-align: center;
-  border-radius: 18px;
-  border: 1px solid #e1e6ef;
-  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
 }
 
 .phone-icon {
-  font-size: 45px;
-  margin-bottom: 12px;
+  font-size: 55px;
+  margin-bottom: 15px;
 }
 
 .phone-placeholder h3 {
   color: #0b5cff;
-  font-size: 24px;
   margin-bottom: 10px;
 }
 
 .phone-placeholder p {
-  color: #687386;
   margin-bottom: 25px;
+  color: #657080;
 }
 
-
-/* =========================================
-   SUPPORT
-   ========================================= */
+/* SUPPORT */
 
 .support {
-  padding: 60px 6%;
+  width: 100%;
   background: #0b5cff;
   color: white;
+  padding: 70px 7%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 35px;
-}
-
-.support > div:first-child {
-  max-width: 650px;
-}
-
-.support .small-title {
-  font-size: 13px;
+  gap: 40px;
 }
 
 .support h2 {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.support p {
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 34px;
+  margin: 10px 0;
 }
 
 .support-buttons {
   display: flex;
-  gap: 12px;
+  gap: 15px;
   flex-wrap: wrap;
 }
 
 .support-btn {
   background: white;
   color: #0b5cff;
-  padding: 13px 20px;
-  border-radius: 8px;
-  font-weight: 700;
-  white-space: nowrap;
 }
 
+/* FOOTER */
 
-/* =========================================
-   FOOTER
-   ========================================= */
+footer {
+  width: 100%;
+  background: #172033;
+  color: white;
+  padding: 45px 20px;
+  text-align: center;
+}
 
 .footer-logo {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 8px;
+  font-size: 21px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .footer-links {
-  margin: 20px 0;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 25px;
   flex-wrap: wrap;
+  margin: 25px 0;
 }
 
 .footer-links a {
@@ -728,33 +326,89 @@ footer a {
 }
 
 .copyright {
+  font-size: 13px;
   opacity: 0.7;
-  font-size: 14px;
 }
 
+/* FORMS */
 
-/* =========================================
-   MOBILE HOMEPAGE
-   ========================================= */
+.form-section {
+  width: 100%;
+  min-height: 80vh;
+  padding: 60px 20px;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 650px;
+  margin: auto;
+  background: white;
+  padding: 35px;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+}
+
+.form-container form {
+  width: 100%;
+}
+
+.form-container label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 7px;
+  font-weight: bold;
+}
+
+.form-container input,
+.form-container textarea,
+.form-container select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #d8deea;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.form-container textarea {
+  resize: vertical;
+}
+
+.form-container button {
+  margin-top: 25px;
+}
+
+/* SECURITY NOTICE */
+
+.security-notice {
+  background: #f0f5ff;
+  border-left: 4px solid #0b5cff;
+  padding: 18px;
+  margin: 25px 0;
+  border-radius: 8px;
+}
+
+.security-notice h3 {
+  color: #0b5cff;
+  margin-bottom: 8px;
+}
+
+/* MOBILE */
 
 @media (max-width: 700px) {
 
-  /* Show hamburger */
+  .header {
+    padding: 12px 16px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
   .menu-btn {
     display: block;
   }
 
-  /* Keep header clean */
-  header {
-    position: relative;
-    padding: 15px 20px;
-  }
-
-  .logo {
-    font-size: 20px;
-  }
-
-  /* Hide navigation until menu is opened */
   header nav {
     display: none;
     position: absolute;
@@ -762,299 +416,121 @@ footer a {
     left: 0;
     width: 100%;
     background: #0b5cff;
-    padding: 15px 20px;
+    padding: 15px;
     flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    gap: 10px;
   }
 
-  /* OPEN MENU */
   header nav.active {
     display: flex;
   }
 
-  header nav a {
-    padding: 13px 5px;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    font-size: 15px;
-  }
-
+  header nav a,
   header nav .login-btn {
-    margin-top: 10px;
-    background: white;
-    color: #0b5cff;
-    padding: 12px;
-    border-radius: 8px;
+    width: 100%;
     text-align: center;
-    border: none;
   }
-
 
   /* HERO */
 
   .hero {
-    padding: 60px 20px;
-  }
-
-  .hero h1 {
-    font-size: 34px;
-    line-height: 1.25;
-  }
-
-  .hero h1 span {
-    display: block;
-  }
-
-  .hero-text {
-    font-size: 16px;
-  }
-
-  .hero-buttons {
-    flex-direction: column;
-  }
-
-  .hero-buttons a {
-    width: 100%;
-    max-width: 280px;
-    text-align: center;
-  }
-
-
-  /* FEATURES */
-
-  .features {
-    grid-template-columns: 1fr;
-    padding: 40px 20px;
-  }
-
-
-  /* HOW IT WORKS */
-
-  .section {
-    padding: 50px 20px;
-  }
-
-  .section-title h2 {
-    font-size: 27px;
-  }
-
-  .steps {
-    grid-template-columns: 1fr;
-  }
-
-
-  /* SUPPORT */
-
-  .support {
-    padding: 45px 20px;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .support h2 {
-    font-size: 27px;
-  }
-
-  .support-buttons {
-    width: 100%;
-  }
-
-  .support-btn {
-    flex: 1;
-    text-align: center;
-  }
-
-
-  /* PHONE */
-
-  .phone-placeholder {
-    padding: 30px 20px;
-  }
-
-     }
-/* =========================================
-   MOBILE HOMEPAGE FIX
-   ========================================= */
-
-@media (max-width: 700px) {
-
-  body {
-    overflow-x: hidden;
-  }
-
-  .hero {
     min-height: auto;
-    padding: 70px 20px;
+    padding: 65px 20px;
   }
 
   .hero-content {
     width: 100%;
-    max-width: 100%;
   }
 
   .hero h1 {
     font-size: 38px;
-    line-height: 1.15;
   }
 
   .hero-text {
     font-size: 16px;
-    line-height: 1.6;
   }
 
   .hero-buttons {
-    display: flex;
+    width: 100%;
     flex-direction: column;
-    gap: 12px;
   }
 
   .hero-buttons a {
     width: 100%;
-    box-sizing: border-box;
-    text-align: center;
   }
-
 
   /* FEATURES */
 
   .features {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
     width: 100%;
-    box-sizing: border-box;
-    padding: 30px 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 45px 20px;
     gap: 20px;
   }
 
   .feature-card {
     width: 100%;
-    box-sizing: border-box;
   }
-
 
   /* SECTIONS */
 
   .section {
-    width: 100%;
-    box-sizing: border-box;
     padding: 60px 20px;
-  }
-
-  .section-title {
-    width: 100%;
-    text-align: center;
-    box-sizing: border-box;
   }
 
   .section-title h2 {
     font-size: 30px;
   }
 
-
   /* STEPS */
 
   .steps {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
     width: 100%;
-    box-sizing: border-box;
+    grid-template-columns: 1fr;
     gap: 20px;
   }
 
   .step {
     width: 100%;
-    box-sizing: border-box;
   }
 
-
-  /* PHONES */
-
-  .phones-section {
-    width: 100%;
-    box-sizing: border-box;
-  }
+  /* PHONE */
 
   .phone-placeholder {
     width: 100%;
-    box-sizing: border-box;
   }
-
 
   /* SUPPORT */
 
   .support {
-    display: flex !important;
     flex-direction: column;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 50px 20px;
-    gap: 25px;
+    align-items: stretch;
+    padding: 55px 20px;
   }
 
   .support-buttons {
-    display: flex;
     flex-direction: column;
-    gap: 12px;
   }
 
   .support-btn {
     width: 100%;
-    box-sizing: border-box;
-    text-align: center;
   }
-
-
-  /* NAVIGATION */
-
-  header {
-    position: relative;
-  }
-
-  .menu-btn {
-    display: block !important;
-    position: relative;
-    z-index: 1001;
-  }
-
-  header nav {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    box-sizing: border-box;
-    flex-direction: column;
-    padding: 15px;
-    gap: 10px;
-    z-index: 1000;
-  }
-
-  header nav.active {
-    display: flex !important;
-  }
-
-  header nav a,
-  header nav .login-btn {
-    width: 100%;
-    box-sizing: border-box;
-    text-align: center;
-  }
-
 
   /* FOOTER */
 
-  footer {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 40px 20px;
-    text-align: center;
-  }
-
   .footer-links {
-    display: flex;
     flex-direction: column;
     gap: 12px;
   }
 
+  /* FORMS */
+
+  .form-section {
+    padding: 40px 15px;
+  }
+
+  .form-container {
+    padding: 25px 18px;
+  }
    }
