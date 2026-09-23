@@ -117,16 +117,180 @@
 
       </div>
 
+<h3>
+  Customer Applications
+</h3>
 
-      <h3>
-        Customer Applications
-      </h3>
+
+<div id="applicationsList">
+  Loading applications...
+</div>
 
 
-      <div id="applicationsList">
-        Loading applications...
-      </div>
+<!-- =========================
+     FINANCING SETUP
+========================= -->
 
+<div
+  id="financingSection"
+  style="
+    display:none;
+    margin-top:30px;
+    padding:20px;
+    border:1px solid #ddd;
+    border-radius:12px;
+    background:#ffffff;
+  "
+>
+
+  <h3>
+    📱 Create Financing Plan
+  </h3>
+
+  <p id="financingCustomerName">
+    Customer
+  </p>
+
+
+  <form id="financingForm">
+
+    <input
+      type="hidden"
+      id="financingCustomerId"
+    >
+
+
+    <label>Phone Brand</label>
+
+    <input
+      type="text"
+      id="phoneBrand"
+      placeholder="Example: Samsung"
+      required
+    >
+
+
+    <label>Phone Model</label>
+
+    <input
+      type="text"
+      id="phoneModel"
+      placeholder="Example: Galaxy A15"
+      required
+    >
+
+
+    <label>Storage / RAM</label>
+
+    <input
+      type="text"
+      id="phoneStorage"
+      placeholder="Example: 128GB / 6GB RAM"
+      required
+    >
+
+
+    <label>Colour</label>
+
+    <input
+      type="text"
+      id="phoneColor"
+      placeholder="Example: Black"
+      required
+    >
+
+
+    <label>IMEI</label>
+
+    <input
+      type="text"
+      id="phoneImei"
+      placeholder="Enter IMEI"
+      required
+    >
+
+
+    <label>Serial Number</label>
+
+    <input
+      type="text"
+      id="phoneSerial"
+      placeholder="Enter serial number"
+      required
+    >
+
+
+    <label>Selling Price (₦)</label>
+
+    <input
+      type="number"
+      id="sellingPrice"
+      min="0"
+      required
+    >
+
+
+    <label>Deposit Required (₦)</label>
+
+    <input
+      type="number"
+      id="depositAmount"
+      min="0"
+      required
+    >
+
+
+    <label>Weekly Payment (₦)</label>
+
+    <input
+      type="number"
+      id="weeklyPayment"
+      min="1"
+      required
+    >
+
+
+    <label>Number of Weeks</label>
+
+    <input
+      type="number"
+      id="numberOfWeeks"
+      min="1"
+      required
+    >
+
+
+    <p id="financingCalculation"></p>
+
+
+    <button
+      type="submit"
+      class="primary-btn"
+    >
+      💾 Create Financing Plan
+    </button>
+
+
+    <button
+      type="button"
+      onclick="closeFinancingForm()"
+      style="
+        margin-left:10px;
+        padding:12px 18px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+      "
+    >
+      Cancel
+    </button>
+
+
+    <p id="financingMessage"></p>
+
+  </form>
+
+</div>
     </div>
 
   </div>
@@ -429,8 +593,25 @@ async function loadApplications() {
         data.applicationStatus ||
         "submitted";
 
-
-      card.innerHTML = `
+     const financingButton =
+  currentStatus === "approved"
+    ? `
+      <button
+        class="primary-btn"
+        type="button"
+        onclick="openFinancingForm(
+          '${doc.id}',
+          '${escapeHTML(data.fullName || "")}'
+        )"
+        style="margin-top:10px;"
+      >
+        📱 Create Financing Plan
+      </button>
+    `
+    : "";
+      
+      card.innerHTML =
+        `${financingButton}
 
         <h3>
           ${escapeHTML(
@@ -659,7 +840,365 @@ async function rejectApplication(applicationId) {
 
 }
 
+/* =========================
+   FINANCING SETUP
+========================= */
 
+function openFinancingForm(
+  customerId,
+  customerName
+) {
+
+  document.getElementById(
+    "financingSection"
+  ).style.display = "block";
+
+
+  document.getElementById(
+    "financingCustomerId"
+  ).value = customerId;
+
+
+  document.getElementById(
+    "financingCustomerName"
+  ).textContent =
+    "Customer: " + customerName;
+
+
+  document.getElementById(
+    "financingSection"
+  ).scrollIntoView({
+    behavior: "smooth"
+  });
+
+}
+
+
+function closeFinancingForm() {
+
+  document.getElementById(
+    "financingSection"
+  ).style.display = "none";
+
+
+  document.getElementById(
+    "financingForm"
+  ).reset();
+
+
+  document.getElementById(
+    "financingMessage"
+  ).textContent = "";
+
+}
+
+
+/* =========================
+   FINANCING CALCULATION
+========================= */
+
+function calculateFinancing() {
+
+  const sellingPrice =
+    Number(
+      document.getElementById(
+        "sellingPrice"
+      ).value
+    ) || 0;
+
+
+  const deposit =
+    Number(
+      document.getElementById(
+        "depositAmount"
+      ).value
+    ) || 0;
+
+
+  const weeklyPayment =
+    Number(
+      document.getElementById(
+        "weeklyPayment"
+      ).value
+    ) || 0;
+
+
+  const weeks =
+    Number(
+      document.getElementById(
+        "numberOfWeeks"
+      ).value
+    ) || 0;
+
+
+  const financedAmount =
+    sellingPrice - deposit;
+
+
+  const scheduledTotal =
+    weeklyPayment * weeks;
+
+
+  const calculation =
+    document.getElementById(
+      "financingCalculation"
+    );
+
+
+  if (
+    sellingPrice <= 0 ||
+    deposit < 0 ||
+    weeklyPayment <= 0 ||
+    weeks <= 0
+  ) {
+
+    calculation.textContent = "";
+
+    return;
+  }
+
+
+  if (deposit > sellingPrice) {
+
+    calculation.innerHTML =
+      "<span style='color:red;'>" +
+      "❌ Deposit cannot be greater than the selling price." +
+      "</span>";
+
+    return;
+  }
+
+
+  calculation.innerHTML =
+    "<strong>Financed Amount:</strong> ₦" +
+    financedAmount.toLocaleString() +
+    "<br>" +
+    "<strong>Scheduled Weekly Total:</strong> ₦" +
+    scheduledTotal.toLocaleString();
+
+}
+
+
+[
+  "sellingPrice",
+  "depositAmount",
+  "weeklyPayment",
+  "numberOfWeeks"
+].forEach(function(id) {
+
+  document
+    .getElementById(id)
+    .addEventListener(
+      "input",
+      calculateFinancing
+    );
+
+});
+
+
+/* =========================
+   CREATE FINANCING RECORD
+========================= */
+
+document
+  .getElementById("financingForm")
+  .addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const message =
+        document.getElementById(
+          "financingMessage"
+        );
+
+
+      message.textContent =
+        "Creating financing plan...";
+
+
+      try {
+
+        const customerId =
+          document.getElementById(
+            "financingCustomerId"
+          ).value;
+
+
+        const sellingPrice =
+          Number(
+            document.getElementById(
+              "sellingPrice"
+            ).value
+          );
+
+
+        const deposit =
+          Number(
+            document.getElementById(
+              "depositAmount"
+            ).value
+          );
+
+
+        const weeklyPayment =
+          Number(
+            document.getElementById(
+              "weeklyPayment"
+            ).value
+          );
+
+
+        const numberOfWeeks =
+          Number(
+            document.getElementById(
+              "numberOfWeeks"
+            ).value
+          );
+
+
+        const financedAmount =
+          sellingPrice - deposit;
+
+
+        if (deposit > sellingPrice) {
+
+          message.textContent =
+            "❌ Deposit cannot be greater than selling price.";
+
+          return;
+        }
+
+
+        const user =
+          auth.currentUser;
+
+
+        if (!user) {
+
+          message.textContent =
+            "❌ Admin session expired. Please log in again.";
+
+          return;
+        }
+
+
+        await db
+          .collection("financingRecords")
+          .doc(customerId)
+          .set({
+
+            customerId:
+              customerId,
+
+            createdBy:
+              user.uid,
+
+            phoneBrand:
+              document.getElementById(
+                "phoneBrand"
+              ).value.trim(),
+
+            phoneModel:
+              document.getElementById(
+                "phoneModel"
+              ).value.trim(),
+
+            phoneStorage:
+              document.getElementById(
+                "phoneStorage"
+              ).value.trim(),
+
+            phoneColor:
+              document.getElementById(
+                "phoneColor"
+              ).value.trim(),
+
+            imei:
+              document.getElementById(
+                "phoneImei"
+              ).value.trim(),
+
+            serialNumber:
+              document.getElementById(
+                "phoneSerial"
+              ).value.trim(),
+
+            sellingPrice:
+              sellingPrice,
+
+            depositAmount:
+              deposit,
+
+            financedAmount:
+              financedAmount,
+
+            weeklyPayment:
+              weeklyPayment,
+
+            numberOfWeeks:
+              numberOfWeeks,
+
+            remainingBalance:
+              financedAmount,
+
+            financingStatus:
+              "pending_deposit",
+
+            depositStatus:
+              "pending_verification",
+
+            createdAt:
+              firebase.firestore
+                .FieldValue
+                .serverTimestamp(),
+
+            updatedAt:
+              firebase.firestore
+                .FieldValue
+                .serverTimestamp()
+
+          });
+
+
+        message.style.color =
+          "green";
+
+
+        message.textContent =
+          "✅ Financing plan created successfully.";
+
+
+        setTimeout(function() {
+
+          closeFinancingForm();
+
+        }, 1500);
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "FINANCING ERROR:",
+          error
+        );
+
+
+        message.style.color =
+          "red";
+
+
+        message.textContent =
+          "❌ Financing creation failed: " +
+          error.message;
+
+      }
+
+    }
+  );
 /* =========================
    HTML SECURITY
 ========================= */
