@@ -569,19 +569,25 @@ async function loadApplications() {
 
   }
 
-  catch (error) {
+catch (error) {
 
-    console.error(
-      "APPLICATION ERROR:",
-      error
-    );
+  console.error(
+    "APPLICATION ERROR:",
+    error
+  );
 
-
-    list.innerHTML =
-      "<p>Unable to load applications.</p>";
-
+  list.innerHTML =
+    "<p style='color:red;'>" +
+    "❌ Application loading error:<br><br>" +
+    escapeHTML(
+      error.code || "unknown"
+    ) +
+    "<br>" +
+    escapeHTML(
+      error.message || "Unknown error"
+    ) +
+    "</p>";
   }
-
 }
 
 
