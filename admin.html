@@ -7,7 +7,7 @@
 
   <title>Admin Dashboard | Miragracematt</title>
 
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 
 <body>
@@ -245,6 +245,21 @@ document
         result.user;
 
 
+      console.log(
+        "Firebase login successful."
+      );
+
+      console.log(
+        "Logged-in email:",
+        user.email
+      );
+
+      console.log(
+        "Logged-in UID:",
+        user.uid
+      );
+
+
       /* =========================
          GET ADMIN DOCUMENT
       ========================= */
@@ -254,6 +269,12 @@ document
           .collection("admins")
           .doc(user.uid)
           .get();
+
+
+      console.log(
+        "Admin document exists:",
+        adminDoc.exists
+      );
 
 
       if (!adminDoc.exists) {
@@ -275,20 +296,49 @@ document
         adminDoc.data();
 
 
-      /*
-       * IMPORTANT:
-       * Firebase has already confirmed
-       * that this document contains:
-       *
-       * status: active
-       */
+      console.log(
+        "ADMIN DOCUMENT:",
+        adminData
+      );
+
+
+      /* =========================
+         READ ADMIN STATUS SAFELY
+      ========================= */
+
+      const statusKey =
+        Object.keys(adminData).find(function(key) {
+
+          return key
+            .trim()
+            .toLowerCase() === "status";
+
+        });
+
 
       const currentAdminStatus =
-        String(
-          adminData.status || ""
-        )
-        .trim()
-        .toLowerCase();
+        statusKey
+          ? String(
+              adminData[statusKey]
+            )
+            .trim()
+            .toLowerCase()
+          : "";
+
+
+      /* =========================
+         STATUS DIAGNOSTIC
+      ========================= */
+
+      console.log(
+        "STATUS FIELD FOUND:",
+        statusKey
+      );
+
+      console.log(
+        "STATUS VALUE:",
+        currentAdminStatus
+      );
 
 
       /* =========================
@@ -302,7 +352,9 @@ document
         adminMessage.textContent =
           "❌ Admin account is not active. " +
           "Firebase reports: " +
-          (currentAdminStatus || "missing");
+          JSON.stringify(
+            currentAdminStatus || "missing"
+          );
 
         return;
       }
@@ -590,4 +642,4 @@ function adminLogout() {
 
 </body>
 
-        </html>
+  </html>
