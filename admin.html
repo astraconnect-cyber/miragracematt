@@ -230,9 +230,7 @@ document
       }
 
 
-      /* =========================
-         FIREBASE AUTH LOGIN
-      ========================= */
+      /* FIREBASE AUTH LOGIN */
 
       const result =
         await auth.signInWithEmailAndPassword(
@@ -247,11 +245,6 @@ document
 
       console.log(
         "Firebase login successful."
-      );
-
-      console.log(
-        "Logged-in email:",
-        user.email
       );
 
       console.log(
@@ -271,12 +264,6 @@ document
           .get();
 
 
-      console.log(
-        "Admin document exists:",
-        adminDoc.exists
-      );
-
-
       if (!adminDoc.exists) {
 
         await auth.signOut();
@@ -288,22 +275,12 @@ document
       }
 
 
-      /* =========================
-         READ ADMIN DATA
-      ========================= */
-
       const adminData =
         adminDoc.data();
 
 
-      console.log(
-        "ADMIN DOCUMENT:",
-        adminData
-      );
-
-
       /* =========================
-         READ ADMIN STATUS SAFELY
+         READ STATUS SAFELY
       ========================= */
 
       const statusKey =
@@ -326,12 +303,8 @@ document
           : "";
 
 
-      /* =========================
-         STATUS DIAGNOSTIC
-      ========================= */
-
       console.log(
-        "STATUS FIELD FOUND:",
+        "STATUS FIELD:",
         statusKey
       );
 
@@ -341,28 +314,20 @@ document
       );
 
 
-      /* =========================
-         CHECK ADMIN STATUS
-      ========================= */
+      /* CHECK ADMIN STATUS */
 
       if (currentAdminStatus !== "active") {
 
         await auth.signOut();
 
         adminMessage.textContent =
-          "❌ Admin account is not active. " +
-          "Firebase reports: " +
-          JSON.stringify(
-            currentAdminStatus || "missing"
-          );
+          "❌ Admin account is not active.";
 
         return;
       }
 
 
-      /* =========================
-         LOGIN SUCCESS
-      ========================= */
+      /* LOGIN SUCCESS */
 
       loginBox.style.display =
         "none";
@@ -382,10 +347,6 @@ document
         "";
 
 
-      /* =========================
-         LOAD APPLICATIONS
-      ========================= */
-
       await loadApplications();
 
     }
@@ -398,63 +359,11 @@ document
       );
 
 
-      let message =
-        "Login failed.";
-
-
-      if (
-        error.code ===
-        "auth/invalid-credential"
-      ) {
-
-        message =
-          "❌ Incorrect email or password.";
-
-      }
-
-      else if (
-        error.code ===
-        "auth/user-not-found"
-      ) {
-
-        message =
-          "❌ This admin email does not exist in Firebase Authentication.";
-
-      }
-
-      else if (
-        error.code ===
-        "auth/wrong-password"
-      ) {
-
-        message =
-          "❌ Incorrect password.";
-
-      }
-
-      else if (
-        error.code ===
-        "permission-denied"
-      ) {
-
-        message =
-          "❌ Firestore permission denied. Your Firebase rules are blocking the admin record.";
-
-      }
-
-      else {
-
-        message =
-          "❌ Error: " +
-          (error.code || "unknown") +
-          " — " +
-          (error.message || "Unknown error.");
-
-      }
-
-
       adminMessage.textContent =
-        message;
+        "❌ Error: " +
+        (error.code || "unknown") +
+        " — " +
+        (error.message || "Unknown error.");
 
     }
 
@@ -516,6 +425,11 @@ async function loadApplications() {
         "feature-card";
 
 
+      const currentStatus =
+        data.applicationStatus ||
+        "submitted";
+
+
       card.innerHTML = `
 
         <h3>
@@ -548,9 +462,9 @@ async function loadApplications() {
 
         <p>
           <strong>Application:</strong>
-          ${escapeHTML(
-            data.applicationStatus || ""
-          )}
+          <strong>
+            ${escapeHTML(currentStatus)}
+          </strong>
         </p>
 
         <p>
@@ -559,6 +473,38 @@ async function loadApplications() {
             data.identityVerificationStatus || ""
           )}
         </p>
+
+        <div style="
+          display:flex;
+          gap:10px;
+          flex-wrap:wrap;
+          margin-top:15px;
+        ">
+
+          <button
+            class="primary-btn"
+            onclick="approveApplication('${doc.id}')"
+          >
+            🟢 Approve Application
+          </button>
+
+          <button
+            type="button"
+            onclick="rejectApplication('${doc.id}')"
+            style="
+              background:#dc2626;
+              color:white;
+              border:none;
+              padding:12px 18px;
+              border-radius:8px;
+              cursor:pointer;
+              font-weight:bold;
+            "
+          >
+            🔴 Reject Application
+          </button>
+
+        </div>
 
       `;
 
@@ -569,25 +515,148 @@ async function loadApplications() {
 
   }
 
-catch (error) {
+  catch (error) {
 
-  console.error(
-    "APPLICATION ERROR:",
-    error
-  );
+    console.error(
+      "APPLICATION ERROR:",
+      error
+    );
 
-  list.innerHTML =
-    "<p style='color:red;'>" +
-    "❌ Application loading error:<br><br>" +
-    escapeHTML(
-      error.code || "unknown"
-    ) +
-    "<br>" +
-    escapeHTML(
-      error.message || "Unknown error"
-    ) +
-    "</p>";
+
+    list.innerHTML =
+      "<p style='color:red;'>" +
+      "❌ Application loading error:<br><br>" +
+      escapeHTML(
+        error.code || "unknown"
+      ) +
+      "<br>" +
+      escapeHTML(
+        error.message || "Unknown error"
+      ) +
+      "</p>";
+
   }
+
+}
+
+
+/* =========================
+   APPROVE APPLICATION
+========================= */
+
+async function approveApplication(applicationId) {
+
+  const confirmed =
+    confirm(
+      "Approve this customer application?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    await db
+      .collection("customerApplications")
+      .doc(applicationId)
+      .update({
+
+        applicationStatus:
+          "approved",
+
+        updatedAt:
+          firebase.firestore.FieldValue.serverTimestamp()
+
+      });
+
+
+    alert(
+      "✅ Application approved successfully."
+    );
+
+
+    await loadApplications();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "APPROVAL ERROR:",
+      error
+    );
+
+
+    alert(
+      "❌ Approval failed: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   REJECT APPLICATION
+========================= */
+
+async function rejectApplication(applicationId) {
+
+  const confirmed =
+    confirm(
+      "Reject this customer application?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    await db
+      .collection("customerApplications")
+      .doc(applicationId)
+      .update({
+
+        applicationStatus:
+          "rejected",
+
+        updatedAt:
+          firebase.firestore.FieldValue.serverTimestamp()
+
+      });
+
+
+    alert(
+      "❌ Application rejected."
+    );
+
+
+    await loadApplications();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "REJECTION ERROR:",
+      error
+    );
+
+
+    alert(
+      "❌ Rejection failed: " +
+      error.message
+    );
+
+  }
+
 }
 
 
@@ -599,30 +668,15 @@ function escapeHTML(value) {
 
   return String(value)
 
-    .replace(
-      /&/g,
-      "&amp;"
-    )
+    .replace(/&/g, "&amp;")
 
-    .replace(
-      /</g,
-      "&lt;"
-    )
+    .replace(/</g, "&lt;")
 
-    .replace(
-      />/g,
-      "&gt;"
-    )
+    .replace(/>/g, "&gt;")
 
-    .replace(
-      /"/g,
-      "&quot;"
-    )
+    .replace(/"/g, "&quot;")
 
-    .replace(
-      /'/g,
-      "&#039;"
-    );
+    .replace(/'/g, "&#039;");
 
 }
 
@@ -648,4 +702,4 @@ function adminLogout() {
 
 </body>
 
-  </html>
+          </html>
