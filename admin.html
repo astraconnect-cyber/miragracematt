@@ -126,7 +126,17 @@
   Loading applications...
 </div>
 
+<!-- =========================
+     FINANCING RECORDS
+========================= -->
 
+<h3 style="margin-top:35px;">
+  💰 Financing Records
+</h3>
+
+<div id="financingRecordsList">
+  Loading financing records...
+</div>
 <!-- =========================
      FINANCING SETUP
 ========================= -->
@@ -509,10 +519,9 @@ document
 
       adminMessage.textContent =
         "";
-
-
+      
       await loadApplications();
-
+      await loadFinancingRecords();
     }
 
     catch (error) {
@@ -1199,6 +1208,274 @@ document
 
     }
   );
+  /* =========================
+   LOAD FINANCING RECORDS
+========================= */
+
+async function loadFinancingRecords() {
+
+  const list =
+    document.getElementById(
+      "financingRecordsList"
+    );
+
+  list.innerHTML =
+    "Loading financing records...";
+
+
+  try {
+
+    const snapshot =
+      await db
+        .collection("financingRecords")
+        .get();
+
+
+    if (snapshot.empty) {
+
+      list.innerHTML =
+        "<p>No financing records yet.</p>";
+
+      return;
+    }
+
+
+    list.innerHTML = "";
+
+
+    snapshot.forEach(function(doc) {
+
+      const data =
+        doc.data();
+
+
+      const card =
+        document.createElement("div");
+
+
+      card.className =
+        "feature-card";
+
+
+      const financingStatus =
+        data.financingStatus ||
+        "unknown";
+
+
+      const depositStatus =
+        data.depositStatus ||
+        "pending_verification";
+
+
+      const verifyButton =
+        depositStatus === "verified"
+          ? `
+            <p style="color:green;font-weight:bold;">
+              ✅ Deposit Verified
+            </p>
+          `
+          : `
+            <button
+              type="button"
+              class="primary-btn"
+              onclick="verifyDeposit('${doc.id}')"
+              style="margin-top:10px;"
+            >
+              💰 Verify Deposit
+            </button>
+          `;
+
+
+      card.innerHTML = `
+
+        <h3>
+          ${escapeHTML(
+            data.phoneBrand || ""
+          )}
+          ${escapeHTML(
+            data.phoneModel || ""
+          )}
+        </h3>
+
+        <p>
+          <strong>Customer ID:</strong>
+          ${escapeHTML(
+            data.customerId || doc.id
+          )}
+        </p>
+
+        <p>
+          <strong>IMEI:</strong>
+          ${escapeHTML(
+            data.imei || ""
+          )}
+        </p>
+
+        <p>
+          <strong>Selling Price:</strong>
+          ₦${Number(
+            data.sellingPrice || 0
+          ).toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Deposit:</strong>
+          ₦${Number(
+            data.depositAmount || 0
+          ).toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Remaining Balance:</strong>
+          ₦${Number(
+            data.remainingBalance || 0
+          ).toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Weekly Payment:</strong>
+          ₦${Number(
+            data.weeklyPayment || 0
+          ).toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Financing Status:</strong>
+          ${escapeHTML(
+            financingStatus
+          )}
+        </p>
+
+        <p>
+          <strong>Deposit Status:</strong>
+          ${escapeHTML(
+            depositStatus
+          )}
+        </p>
+
+        ${verifyButton}
+
+      `;
+
+
+      list.appendChild(card);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "FINANCING RECORD ERROR:",
+      error
+    );
+
+
+    list.innerHTML =
+      "<p style='color:red;'>" +
+      "❌ Could not load financing records.<br><br>" +
+      escapeHTML(
+        error.code || "unknown"
+      ) +
+      "<br>" +
+      escapeHTML(
+        error.message || "Unknown error"
+      ) +
+      "</p>";
+
+  }
+
+}
+
+
+/* =========================
+   VERIFY DEPOSIT
+========================= */
+
+async function verifyDeposit(
+  financingId
+) {
+
+  const confirmed =
+    confirm(
+      "Confirm that the customer's deposit has been received and verified?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  const admin =
+    auth.currentUser;
+
+
+  if (!admin) {
+
+    alert(
+      "❌ Admin session expired. Please log in again."
+    );
+
+    return;
+  }
+
+
+  try {
+
+    await db
+      .collection("financingRecords")
+      .doc(financingId)
+      .update({
+
+        depositStatus:
+          "verified",
+
+        financingStatus:
+          "active",
+
+        depositVerifiedAt:
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp(),
+
+        depositVerifiedBy:
+          admin.uid,
+
+        updatedAt:
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp()
+
+      });
+
+
+    alert(
+      "✅ Deposit verified. Financing is now active."
+    );
+
+
+    await loadFinancingRecords();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "DEPOSIT VERIFICATION ERROR:",
+      error
+    );
+
+
+    alert(
+      "❌ Deposit verification failed: " +
+      error.message
+    );
+
+  }
+
+      }
 /* =========================
    HTML SECURITY
 ========================= */
