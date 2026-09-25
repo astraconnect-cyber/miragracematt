@@ -1352,9 +1352,25 @@ async function loadFinancingRecords() {
             depositStatus
           )}
         </p>
-
+        
         ${verifyButton}
 
+${
+  depositStatus === "verified" &&
+  financingStatus === "active"
+    ? `
+      <button
+        type="button"
+        class="primary-btn"
+        onclick="generatePaymentSchedule('${doc.id}')"
+        style="margin-top:10px;"
+      >
+        📅 Generate Payment Schedule
+      </button>
+    `
+    : ""
+  
+  }
       `;
 
 
