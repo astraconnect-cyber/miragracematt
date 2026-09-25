@@ -1492,6 +1492,248 @@ async function verifyDeposit(
   }
 
       }
+  /* =========================
+   GENERATE PAYMENT SCHEDULE
+========================= */
+
+async function generatePaymentSchedule(financingId) {
+
+  const confirmed = confirm(
+    "Generate the weekly payment schedule for this financing plan?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  const admin = auth.currentUser;
+
+  if (!admin) {
+    alert(
+      "❌ Admin session expired. Please log in again."
+    );
+    return;
+  }
+
+  try {
+
+    const financingRef =
+      db.collection("financingRecords")
+        .doc(financingId);
+
+    const financingSnapshot =
+      await financingRef.get();
+
+    if (!financingSnapshot.exists) {
+      alert(
+        "❌ Financing record not found."
+      );
+      return;
+    }
+
+    const financing =
+      financingSnapshot.data();
+
+    /* =========================
+       SECURITY CHECKS
+    ========================= */
+
+    if (financing.depositStatus !== "verified") {
+
+      alert(
+        "❌ The deposit must be verified first."
+      );
+
+      return;
+    }
+
+    if (financing.financingStatus !== "active") {
+
+      alert(
+        "❌ Financing is not active."
+      );
+
+      return;
+    }
+
+    /* =========================
+       CHECK IF SCHEDULE EXISTS
+    ========================= */
+
+    const existingSchedule =
+      await db
+        .collection("paymentSchedules")
+        .where(
+          "financingId",
+          "==",
+          financingId
+        )
+        .limit(1)
+        .get();
+
+    if (!existingSchedule.empty) {
+
+      alert(
+        "⚠️ A payment schedule already exists for this financing plan."
+      );
+
+      return;
+    }
+
+    /* =========================
+       VALIDATE PLAN
+    ========================= */
+
+    const weeklyPayment =
+      Number(financing.weeklyPayment || 0);
+
+    const numberOfWeeks =
+      Number(financing.numberOfWeeks || 0);
+
+    if (
+      weeklyPayment <= 0 ||
+      numberOfWeeks <= 0
+    ) {
+
+      alert(
+        "❌ Invalid weekly payment or number of weeks."
+      );
+
+      return;
+    }
+
+    /* =========================
+       CREATE SCHEDULE
+    ========================= */
+
+    const batch =
+      db.batch();
+
+    const startDate =
+      new Date();
+
+    for (
+      let i = 1;
+      i <= numberOfWeeks;
+      i++
+    ) {
+
+      const dueDate =
+        new Date(startDate);
+
+      dueDate.setDate(
+        startDate.getDate() +
+        (i * 7)
+      );
+
+      const paymentRef =
+        db
+          .collection("paymentSchedules")
+          .doc();
+
+      batch.set(
+        paymentRef,
+        {
+
+          financingId:
+            financingId,
+
+          customerId:
+            financing.customerId,
+
+          paymentNumber:
+            i,
+
+          amountDue:
+            weeklyPayment,
+
+          amountPaid:
+            0,
+
+          dueDate:
+            firebase.firestore
+              .Timestamp
+              .fromDate(dueDate),
+
+          status:
+            "pending",
+
+          paidAt:
+            null,
+
+          gracePeriodDays:
+            1,
+
+          overdue:
+            false,
+
+          createdAt:
+            firebase.firestore
+              .FieldValue
+              .serverTimestamp(),
+
+          createdBy:
+            admin.uid
+
+        }
+      );
+    }
+
+    /* =========================
+       UPDATE FINANCING RECORD
+    ========================= */
+
+    batch.update(
+      financingRef,
+      {
+
+        paymentScheduleCreated:
+          true,
+
+        paymentScheduleCreatedAt:
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp(),
+
+        paymentScheduleCreatedBy:
+          admin.uid,
+
+        currentPaymentNumber:
+          1,
+
+        updatedAt:
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp()
+
+      }
+    );
+
+    await batch.commit();
+
+    alert(
+      "✅ Payment schedule created successfully."
+    );
+
+    await loadFinancingRecords();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "PAYMENT SCHEDULE ERROR:",
+      error
+    );
+
+    alert(
+      "❌ Could not create payment schedule: " +
+      error.message
+    );
+
+  }
+
+    }
 /* =========================
    HTML SECURITY
 ========================= */
