@@ -60,8 +60,8 @@
     <div id="adminLoginBox">
 
       <h3>Admin Login</h3>
-
-      <form id="adminLoginForm">
+      
+        <form id="adminLoginForm" onsubmit="adminLogin(event)">
 
         <label>Email Address</label>
 
@@ -373,7 +373,7 @@ const adminMessage =
 
 document
   .getElementById("adminLoginForm")
-  .addEventListener("submit", async function(event) {
+  .addEventListener("submit", async function adminLogin(event) {
 
     event.preventDefault();
 
