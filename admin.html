@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <title>Admin Dashboard | Miragracematt</title>
 
   <link rel="stylesheet" href="style.css?v=12">
@@ -60,8 +60,8 @@
     <div id="adminLoginBox">
 
       <h3>Admin Login</h3>
-      
-        <form id="adminLoginForm">
+
+      <form id="adminLoginForm">
 
         <label>Email Address</label>
 
@@ -86,6 +86,7 @@
         <button
           type="submit"
           class="primary-btn"
+          id="adminLoginButton"
         >
           Admin Login
         </button>
@@ -117,190 +118,190 @@
 
       </div>
 
-<h3>
-  Customer Applications
-</h3>
+
+      <h3>
+        Customer Applications
+      </h3>
+
+      <div id="applicationsList">
+        Loading applications...
+      </div>
 
 
-<div id="applicationsList">
-  Loading applications...
-</div>
+      <!-- FINANCING RECORDS -->
 
-<!-- =========================
-     FINANCING RECORDS
-========================= -->
+      <h3 style="margin-top:35px;">
+        💰 Financing Records
+      </h3>
 
-<h3 style="margin-top:35px;">
-  💰 Financing Records
-</h3>
-
-<div id="financingRecordsList">
-  Loading financing records...
-</div>
-<!-- =========================
-     FINANCING SETUP
-========================= -->
-
-<div
-  id="financingSection"
-  style="
-    display:none;
-    margin-top:30px;
-    padding:20px;
-    border:1px solid #ddd;
-    border-radius:12px;
-    background:#ffffff;
-  "
->
-
-  <h3>
-    📱 Create Financing Plan
-  </h3>
-
-  <p id="financingCustomerName">
-    Customer
-  </p>
+      <div id="financingRecordsList">
+        Loading financing records...
+      </div>
 
 
-  <form id="financingForm">
+      <!-- FINANCING SETUP -->
 
-    <input
-      type="hidden"
-      id="financingCustomerId"
-    >
+      <div
+        id="financingSection"
+        style="
+          display:none;
+          margin-top:30px;
+          padding:20px;
+          border:1px solid #ddd;
+          border-radius:12px;
+          background:#ffffff;
+        "
+      >
 
+        <h3>
+          📱 Create Financing Plan
+        </h3>
 
-    <label>Phone Brand</label>
-
-    <input
-      type="text"
-      id="phoneBrand"
-      placeholder="Example: Samsung"
-      required
-    >
-
-
-    <label>Phone Model</label>
-
-    <input
-      type="text"
-      id="phoneModel"
-      placeholder="Example: Galaxy A15"
-      required
-    >
+        <p id="financingCustomerName">
+          Customer
+        </p>
 
 
-    <label>Storage / RAM</label>
+        <form id="financingForm">
 
-    <input
-      type="text"
-      id="phoneStorage"
-      placeholder="Example: 128GB / 6GB RAM"
-      required
-    >
+          <input
+            type="hidden"
+            id="financingCustomerId"
+          >
 
 
-    <label>Colour</label>
+          <label>Phone Brand</label>
 
-    <input
-      type="text"
-      id="phoneColor"
-      placeholder="Example: Black"
-      required
-    >
-
-
-    <label>IMEI</label>
-
-    <input
-      type="text"
-      id="phoneImei"
-      placeholder="Enter IMEI"
-      required
-    >
+          <input
+            type="text"
+            id="phoneBrand"
+            placeholder="Example: Samsung"
+            required
+          >
 
 
-    <label>Serial Number</label>
+          <label>Phone Model</label>
 
-    <input
-      type="text"
-      id="phoneSerial"
-      placeholder="Enter serial number"
-      required
-    >
-
-
-    <label>Selling Price (₦)</label>
-
-    <input
-      type="number"
-      id="sellingPrice"
-      min="0"
-      required
-    >
+          <input
+            type="text"
+            id="phoneModel"
+            placeholder="Example: Galaxy A15"
+            required
+          >
 
 
-    <label>Deposit Required (₦)</label>
+          <label>Storage / RAM</label>
 
-    <input
-      type="number"
-      id="depositAmount"
-      min="0"
-      required
-    >
-
-
-    <label>Weekly Payment (₦)</label>
-
-    <input
-      type="number"
-      id="weeklyPayment"
-      min="1"
-      required
-    >
+          <input
+            type="text"
+            id="phoneStorage"
+            placeholder="Example: 128GB / 6GB RAM"
+            required
+          >
 
 
-    <label>Number of Weeks</label>
+          <label>Colour</label>
 
-    <input
-      type="number"
-      id="numberOfWeeks"
-      min="1"
-      required
-    >
-
-
-    <p id="financingCalculation"></p>
+          <input
+            type="text"
+            id="phoneColor"
+            placeholder="Example: Black"
+            required
+          >
 
 
-    <button
-      type="submit"
-      class="primary-btn"
-    >
-      💾 Create Financing Plan
-    </button>
+          <label>IMEI</label>
+
+          <input
+            type="text"
+            id="phoneImei"
+            placeholder="Enter IMEI"
+            required
+          >
 
 
-    <button
-      type="button"
-      onclick="closeFinancingForm()"
-      style="
-        margin-left:10px;
-        padding:12px 18px;
-        border:none;
-        border-radius:8px;
-        cursor:pointer;
-      "
-    >
-      Cancel
-    </button>
+          <label>Serial Number</label>
+
+          <input
+            type="text"
+            id="phoneSerial"
+            placeholder="Enter serial number"
+            required
+          >
 
 
-    <p id="financingMessage"></p>
+          <label>Selling Price (₦)</label>
 
-  </form>
+          <input
+            type="number"
+            id="sellingPrice"
+            min="0"
+            required
+          >
 
-</div>
+
+          <label>Deposit Required (₦)</label>
+
+          <input
+            type="number"
+            id="depositAmount"
+            min="0"
+            required
+          >
+
+
+          <label>Weekly Payment (₦)</label>
+
+          <input
+            type="number"
+            id="weeklyPayment"
+            min="1"
+            required
+          >
+
+
+          <label>Number of Weeks</label>
+
+          <input
+            type="number"
+            id="numberOfWeeks"
+            min="1"
+            required
+          >
+
+
+          <p id="financingCalculation"></p>
+
+
+          <button
+            type="submit"
+            class="primary-btn"
+          >
+            💾 Create Financing Plan
+          </button>
+
+
+          <button
+            type="button"
+            onclick="closeFinancingForm()"
+            style="
+              margin-left:10px;
+              padding:12px 18px;
+              border:none;
+              border-radius:8px;
+              cursor:pointer;
+            "
+          >
+            Cancel
+          </button>
+
+
+          <p id="financingMessage"></p>
+
+        </form>
+
+      </div>
+
     </div>
 
   </div>
@@ -339,15 +340,15 @@
 
 
 <script>
-(function () {
 
 const firebaseApp =
-  firebase.apps.length
-    ? firebase.app()
-    : firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+const auth =
+  firebase.auth();
+
+const db =
+  firebase.firestore();
 
 
 /* =========================
@@ -366,255 +367,238 @@ const adminStatusElement =
 const adminMessage =
   document.getElementById("adminMessage");
 
+
 /* =========================
    ADMIN LOGIN
 ========================= */
 
 document
   .getElementById("adminLoginForm")
-  .addEventListener("submit", async function(event) {
+  .addEventListener(
+    "submit",
+    async function(event) {
 
-    event.preventDefault();
+      event.preventDefault();
 
-    const adminMessage =
-      document.getElementById("adminMessage");
-
-    const loginButton =
-      document.querySelector(
-        "#adminLoginForm button[type='submit']"
-      );
-
-    adminMessage.style.color = "";
-    adminMessage.textContent =
-      "Checking administrator account...";
-
-    if (loginButton) {
-      loginButton.disabled = true;
-      loginButton.textContent = "Checking...";
-    }
-
-    try {
-
-      const email =
-        document
-          .getElementById("adminEmail")
-          .value
-          .trim();
-
-      const password =
-        document
-          .getElementById("adminPassword")
-          .value;
-
-      if (!email || !password) {
-
-        adminMessage.textContent =
-          "❌ Enter your email and password.";
-
-        return;
-      }
-
-
-      /* =========================
-         FIREBASE LOGIN
-      ========================= */
-
-      const result =
-        await auth.signInWithEmailAndPassword(
-          email,
-          password
+      const loginButton =
+        document.getElementById(
+          "adminLoginButton"
         );
 
-      const user =
-        result.user;
-
-      console.log(
-        "Firebase login successful."
-      );
-
-      console.log(
-        "Admin UID:",
-        user.uid
-      );
-
-
-      /* =========================
-         GET ADMIN RECORD
-      ========================= */
-
-      const adminDoc =
-        await db
-          .collection("admins")
-          .doc(user.uid)
-          .get();
-
-
-      if (!adminDoc.exists) {
-
-        await auth.signOut();
-
-        adminMessage.style.color =
-          "red";
-
-        adminMessage.textContent =
-          "❌ This Firebase account does not have an administrator record.";
-
-        return;
-      }
-
-
-      const adminData =
-        adminDoc.data();
-
-
-      /* =========================
-         CHECK ADMIN STATUS
-      ========================= */
-
-      const statusKey =
-        Object.keys(adminData).find(
-          function(key) {
-
-            return key
-              .trim()
-              .toLowerCase() === "status";
-
-          }
-        );
-
-
-      const currentAdminStatus =
-        statusKey
-          ? String(
-              adminData[statusKey]
-            )
-              .trim()
-              .toLowerCase()
-          : "";
-
-
-      console.log(
-        "Admin status:",
-        currentAdminStatus
-      );
-
-
-      if (
-        currentAdminStatus !==
-        "active"
-      ) {
-
-        await auth.signOut();
-
-        adminMessage.style.color =
-          "red";
-
-        adminMessage.textContent =
-          "❌ Admin account is not active.";
-
-        return;
-      }
-
-
-      /* =========================
-         LOGIN SUCCESS
-      ========================= */
-
-      loginBox.style.display =
-        "none";
-
-      dashboard.style.display =
-        "block";
-
-
-      adminStatusElement.textContent =
-        "Administrator access verified.";
-
-      adminStatusElement.style.color =
-        "green";
-
+      adminMessage.style.color = "";
 
       adminMessage.textContent =
-        "";
+        "Checking administrator account...";
+
+      loginButton.disabled = true;
+
+      loginButton.textContent =
+        "Checking...";
 
 
-      /* =========================
-         LOAD ADMIN DATA
-      ========================= */
+      try {
 
-      await loadApplications();
+        const email =
+          document
+            .getElementById("adminEmail")
+            .value
+            .trim();
 
-      await loadFinancingRecords();
-
-    }
-
-    catch (error) {
-
-      console.error(
-        "ADMIN LOGIN ERROR:",
-        error
-      );
-
-      adminMessage.style.color =
-        "red";
+        const password =
+          document
+            .getElementById("adminPassword")
+            .value;
 
 
-      /* FRIENDLIER FIREBASE ERRORS */
+        if (!email || !password) {
 
-      if (
-        error.code ===
-        "auth/invalid-credential"
-      ) {
+          adminMessage.textContent =
+            "❌ Enter your email and password.";
+
+          return;
+        }
+
+
+        const result =
+          await auth.signInWithEmailAndPassword(
+            email,
+            password
+          );
+
+
+        const user =
+          result.user;
+
+
+        console.log(
+          "Firebase login successful."
+        );
+
+        console.log(
+          "Admin UID:",
+          user.uid
+        );
+
+
+        const adminDoc =
+          await db
+            .collection("admins")
+            .doc(user.uid)
+            .get();
+
+
+        if (!adminDoc.exists) {
+
+          await auth.signOut();
+
+          adminMessage.style.color =
+            "red";
+
+          adminMessage.textContent =
+            "❌ This Firebase account does not have an administrator record.";
+
+          return;
+        }
+
+
+        const adminData =
+          adminDoc.data();
+
+
+        const statusKey =
+          Object.keys(adminData).find(
+            function(key) {
+
+              return key
+                .trim()
+                .toLowerCase() === "status";
+
+            }
+          );
+
+
+        const currentAdminStatus =
+          statusKey
+            ? String(
+                adminData[statusKey]
+              )
+                .trim()
+                .toLowerCase()
+            : "";
+
+
+        console.log(
+          "Admin status:",
+          currentAdminStatus
+        );
+
+
+        if (
+          currentAdminStatus !==
+          "active"
+        ) {
+
+          await auth.signOut();
+
+          adminMessage.style.color =
+            "red";
+
+          adminMessage.textContent =
+            "❌ Admin account is not active.";
+
+          return;
+        }
+
+
+        loginBox.style.display =
+          "none";
+
+        dashboard.style.display =
+          "block";
+
+        adminStatusElement.textContent =
+          "Administrator access verified.";
+
+        adminStatusElement.style.color =
+          "green";
 
         adminMessage.textContent =
-          "❌ Incorrect email or password.";
+          "";
+
+
+        await loadApplications();
+
+        await loadFinancingRecords();
 
       }
 
-      else if (
-        error.code ===
-        "auth/user-not-found"
-      ) {
 
-        adminMessage.textContent =
-          "❌ No Firebase account exists with this email.";
+      catch (error) {
+
+        console.error(
+          "ADMIN LOGIN ERROR:",
+          error
+        );
+
+        adminMessage.style.color =
+          "red";
+
+
+        if (
+          error.code ===
+          "auth/invalid-credential"
+        ) {
+
+          adminMessage.textContent =
+            "❌ Incorrect email or password.";
+
+        }
+
+        else if (
+          error.code ===
+          "auth/user-not-found"
+        ) {
+
+          adminMessage.textContent =
+            "❌ No Firebase account exists with this email.";
+
+        }
+
+        else if (
+          error.code ===
+          "auth/wrong-password"
+        ) {
+
+          adminMessage.textContent =
+            "❌ Incorrect password.";
+
+        }
+
+        else if (
+          error.code ===
+          "auth/too-many-requests"
+        ) {
+
+          adminMessage.textContent =
+            "❌ Too many login attempts. Try again later.";
+
+        }
+
+        else {
+
+          adminMessage.textContent =
+            "❌ Login error: " +
+            (
+              error.message ||
+              "Unknown error."
+            );
+
+        }
 
       }
 
-      else if (
-        error.code ===
-        "auth/wrong-password"
-      ) {
 
-        adminMessage.textContent =
-          "❌ Incorrect password.";
-
-      }
-
-      else if (
-        error.code ===
-        "auth/too-many-requests"
-      ) {
-
-        adminMessage.textContent =
-          "❌ Too many login attempts. Try again later.";
-
-      }
-
-      else {
-
-        adminMessage.textContent =
-          "❌ Login error: " +
-          (error.message ||
-            "Unknown error.");
-
-      }
-
-    }
-
-    finally {
-
-      if (loginButton) {
+      finally {
 
         loginButton.disabled =
           false;
@@ -625,8 +609,9 @@ document
       }
 
     }
+  );
 
-  });
+
 /* =========================
    LOAD APPLICATIONS
 ========================= */
@@ -637,7 +622,6 @@ async function loadApplications() {
     document.getElementById(
       "applicationsList"
     );
-
 
   list.innerHTML =
     "Loading applications...";
@@ -664,130 +648,138 @@ async function loadApplications() {
     }
 
 
-    list.innerHTML =
-      "";
+    list.innerHTML = "";
 
 
-    snapshot.forEach(function(doc) {
+    snapshot.forEach(
+      function(doc) {
 
-      const data =
-        doc.data();
-
-
-      const card =
-        document.createElement("div");
+        const data =
+          doc.data();
 
 
-      card.className =
-        "feature-card";
+        const card =
+          document.createElement("div");
 
 
-      const currentStatus =
-        data.applicationStatus ||
-        "submitted";
-
-     const financingButton =
-  currentStatus === "approved"
-    ? `
-      <button
-        class="primary-btn"
-        type="button"
-        onclick="openFinancingForm(
-          '${doc.id}',
-          '${escapeHTML(data.fullName || "")}'
-        )"
-        style="margin-top:10px;"
-      >
-        📱 Create Financing Plan
-      </button>
-    `
-    : "";
-      
-      card.innerHTML =
-        `${financingButton}
-
-        <h3>
-          ${escapeHTML(
-            data.fullName ||
-            "Unknown Customer"
-          )}
-        </h3>
-
-        <p>
-          <strong>Phone:</strong>
-          ${escapeHTML(
-            data.phone || ""
-          )}
-        </p>
-
-        <p>
-          <strong>Email:</strong>
-          ${escapeHTML(
-            data.email || ""
-          )}
-        </p>
-
-        <p>
-          <strong>School:</strong>
-          ${escapeHTML(
-            data.school || ""
-          )}
-        </p>
-
-        <p>
-          <strong>Application:</strong>
-          <strong>
-            ${escapeHTML(currentStatus)}
-          </strong>
-        </p>
-
-        <p>
-          <strong>Identity Verification:</strong>
-          ${escapeHTML(
-            data.identityVerificationStatus || ""
-          )}
-        </p>
-
-        <div style="
-          display:flex;
-          gap:10px;
-          flex-wrap:wrap;
-          margin-top:15px;
-        ">
-
-          <button
-            class="primary-btn"
-            onclick="approveApplication('${doc.id}')"
-          >
-            🟢 Approve Application
-          </button>
-
-          <button
-            type="button"
-            onclick="rejectApplication('${doc.id}')"
-            style="
-              background:#dc2626;
-              color:white;
-              border:none;
-              padding:12px 18px;
-              border-radius:8px;
-              cursor:pointer;
-              font-weight:bold;
-            "
-          >
-            🔴 Reject Application
-          </button>
-
-        </div>
-
-      `;
+        card.className =
+          "feature-card";
 
 
-      list.appendChild(card);
+        const currentStatus =
+          data.applicationStatus ||
+          "submitted";
 
-    });
+
+        const financingButton =
+          currentStatus === "approved"
+            ? `
+              <button
+                class="primary-btn"
+                type="button"
+                onclick="openFinancingForm(
+                  '${doc.id}',
+                  '${escapeHTML(data.fullName || "")}'
+                )"
+                style="margin-top:10px;"
+              >
+                📱 Create Financing Plan
+              </button>
+            `
+            : "";
+
+
+        card.innerHTML =
+          `
+            ${financingButton}
+
+            <h3>
+              ${escapeHTML(
+                data.fullName ||
+                "Unknown Customer"
+              )}
+            </h3>
+
+            <p>
+              <strong>Phone:</strong>
+              ${escapeHTML(
+                data.phone || ""
+              )}
+            </p>
+
+            <p>
+              <strong>Email:</strong>
+              ${escapeHTML(
+                data.email || ""
+              )}
+            </p>
+
+            <p>
+              <strong>School:</strong>
+              ${escapeHTML(
+                data.school || ""
+              )}
+            </p>
+
+            <p>
+              <strong>Application:</strong>
+              <strong>
+                ${escapeHTML(
+                  currentStatus
+                )}
+              </strong>
+            </p>
+
+            <p>
+              <strong>Identity Verification:</strong>
+              ${escapeHTML(
+                data.identityVerificationStatus ||
+                ""
+              )}
+            </p>
+
+            <div style="
+              display:flex;
+              gap:10px;
+              flex-wrap:wrap;
+              margin-top:15px;
+            ">
+
+              <button
+                class="primary-btn"
+                type="button"
+                onclick="approveApplication('${doc.id}')"
+              >
+                🟢 Approve Application
+              </button>
+
+              <button
+                type="button"
+                onclick="rejectApplication('${doc.id}')"
+                style="
+                  background:#dc2626;
+                  color:white;
+                  border:none;
+                  padding:12px 18px;
+                  border-radius:8px;
+                  cursor:pointer;
+                  font-weight:bold;
+                "
+              >
+                🔴 Reject Application
+              </button>
+
+            </div>
+          `;
+
+
+        list.appendChild(card);
+
+      }
+    );
 
   }
+
 
   catch (error) {
 
@@ -801,11 +793,13 @@ async function loadApplications() {
       "<p style='color:red;'>" +
       "❌ Application loading error:<br><br>" +
       escapeHTML(
-        error.code || "unknown"
+        error.code ||
+        "unknown"
       ) +
       "<br>" +
       escapeHTML(
-        error.message || "Unknown error"
+        error.message ||
+        "Unknown error"
       ) +
       "</p>";
 
@@ -818,7 +812,9 @@ async function loadApplications() {
    APPROVE APPLICATION
 ========================= */
 
-async function approveApplication(applicationId) {
+async function approveApplication(
+  applicationId
+) {
 
   const confirmed =
     confirm(
@@ -842,7 +838,9 @@ async function approveApplication(applicationId) {
           "approved",
 
         updatedAt:
-          firebase.firestore.FieldValue.serverTimestamp()
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp()
 
       });
 
@@ -855,6 +853,7 @@ async function approveApplication(applicationId) {
     await loadApplications();
 
   }
+
 
   catch (error) {
 
@@ -878,7 +877,9 @@ async function approveApplication(applicationId) {
    REJECT APPLICATION
 ========================= */
 
-async function rejectApplication(applicationId) {
+async function rejectApplication(
+  applicationId
+) {
 
   const confirmed =
     confirm(
@@ -902,7 +903,9 @@ async function rejectApplication(applicationId) {
           "rejected",
 
         updatedAt:
-          firebase.firestore.FieldValue.serverTimestamp()
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp()
 
       });
 
@@ -915,6 +918,7 @@ async function rejectApplication(applicationId) {
     await loadApplications();
 
   }
+
 
   catch (error) {
 
@@ -933,6 +937,7 @@ async function rejectApplication(applicationId) {
 
 }
 
+
 /* =========================
    FINANCING SETUP
 ========================= */
@@ -942,46 +947,65 @@ function openFinancingForm(
   customerName
 ) {
 
-  document.getElementById(
-    "financingSection"
-  ).style.display = "block";
+  document
+    .getElementById(
+      "financingSection"
+    )
+    .style.display =
+      "block";
 
 
-  document.getElementById(
-    "financingCustomerId"
-  ).value = customerId;
+  document
+    .getElementById(
+      "financingCustomerId"
+    )
+    .value =
+      customerId;
 
 
-  document.getElementById(
-    "financingCustomerName"
-  ).textContent =
-    "Customer: " + customerName;
+  document
+    .getElementById(
+      "financingCustomerName"
+    )
+    .textContent =
+      "Customer: " +
+      customerName;
 
 
-  document.getElementById(
-    "financingSection"
-  ).scrollIntoView({
-    behavior: "smooth"
-  });
+  document
+    .getElementById(
+      "financingSection"
+    )
+    .scrollIntoView({
+      behavior:"smooth"
+    });
 
 }
 
 
 function closeFinancingForm() {
 
-  document.getElementById(
-    "financingSection"
-  ).style.display = "none";
+  document
+    .getElementById(
+      "financingSection"
+    )
+    .style.display =
+      "none";
 
 
-  document.getElementById(
-    "financingForm"
-  ).reset();
+  document
+    .getElementById(
+      "financingForm"
+    )
+    .reset();
 
 
-  document.getElementById(
-    "financingMessage"
-  ).textContent = "";
+  document
+    .getElementById(
+      "financingMessage"
+    )
+    .textContent =
+      "";
 
 }
 
@@ -1025,11 +1049,13 @@ function calculateFinancing() {
 
 
   const financedAmount =
-    sellingPrice - deposit;
+    sellingPrice -
+    deposit;
 
 
   const scheduledTotal =
-    weeklyPayment * weeks;
+    weeklyPayment *
+    weeks;
 
 
   const calculation =
@@ -1045,13 +1071,17 @@ function calculateFinancing() {
     weeks <= 0
   ) {
 
-    calculation.textContent = "";
+    calculation.textContent =
+      "";
 
     return;
   }
 
 
-  if (deposit > sellingPrice) {
+  if (
+    deposit >
+    sellingPrice
+  ) {
 
     calculation.innerHTML =
       "<span style='color:red;'>" +
@@ -1077,1040 +1107,15 @@ function calculateFinancing() {
   "depositAmount",
   "weeklyPayment",
   "numberOfWeeks"
-].forEach(function(id) {
-
-  document
-    .getElementById(id)
-    .addEventListener(
-      "input",
-      calculateFinancing
-    );
-
-});
-
-
-/* =========================
-   CREATE FINANCING RECORD
-========================= */
-
-document
-  .getElementById("financingForm")
-  .addEventListener(
-    "submit",
-    async function(event) {
-
-      event.preventDefault();
-
-
-      const message =
-        document.getElementById(
-          "financingMessage"
-        );
-
-
-      message.textContent =
-        "Creating financing plan...";
-
-
-      try {
-
-        const customerId =
-          document.getElementById(
-            "financingCustomerId"
-          ).value;
-
-
-        const sellingPrice =
-          Number(
-            document.getElementById(
-              "sellingPrice"
-            ).value
-          );
-
-
-        const deposit =
-          Number(
-            document.getElementById(
-              "depositAmount"
-            ).value
-          );
-
-
-        const weeklyPayment =
-          Number(
-            document.getElementById(
-              "weeklyPayment"
-            ).value
-          );
-
-
-        const numberOfWeeks =
-          Number(
-            document.getElementById(
-              "numberOfWeeks"
-            ).value
-          );
-
-
-        const financedAmount =
-          sellingPrice - deposit;
-
-
-        if (deposit > sellingPrice) {
-
-          message.textContent =
-            "❌ Deposit cannot be greater than selling price.";
-
-          return;
-        }
-
-
-        const user =
-          auth.currentUser;
-
-
-        if (!user) {
-
-          message.textContent =
-            "❌ Admin session expired. Please log in again.";
-
-          return;
-        }
-
-
-        await db
-          .collection("financingRecords")
-          .doc(customerId)
-          .set({
-
-            customerId:
-              customerId,
-
-            createdBy:
-              user.uid,
-
-            phoneBrand:
-              document.getElementById(
-                "phoneBrand"
-              ).value.trim(),
-
-            phoneModel:
-              document.getElementById(
-                "phoneModel"
-              ).value.trim(),
-
-            phoneStorage:
-              document.getElementById(
-                "phoneStorage"
-              ).value.trim(),
-
-            phoneColor:
-              document.getElementById(
-                "phoneColor"
-              ).value.trim(),
-
-            imei:
-              document.getElementById(
-                "phoneImei"
-              ).value.trim(),
-
-            serialNumber:
-              document.getElementById(
-                "phoneSerial"
-              ).value.trim(),
-
-            sellingPrice:
-              sellingPrice,
-
-            depositAmount:
-              deposit,
-
-            financedAmount:
-              financedAmount,
-
-            weeklyPayment:
-              weeklyPayment,
-
-            numberOfWeeks:
-              numberOfWeeks,
-            remainingBalance:
-              financedAmount,
-
-            financingStatus:
-              "pending_deposit",
-
-            depositStatus:
-              "pending_verification",
-
-            createdAt:
-              firebase.firestore
-                .FieldValue
-                .serverTimestamp(),
-
-            updatedAt:
-              firebase.firestore
-                .FieldValue
-                .serverTimestamp()
-
-          });
-
-
-        message.style.color =
-          "green";
-
-
-        message.textContent =
-          "✅ Financing plan created successfully.";
-
-
-        setTimeout(function() {
-
-          closeFinancingForm();
-
-        }, 1500);
-
-      }
-
-      catch (error) {
-
-        console.error(
-          "FINANCING ERROR:",
-          error
-        );
-
-
-        message.style.color =
-          "red";
-
-
-        message.textContent =
-          "❌ Financing creation failed: " +
-          error.message;
-
-      }
-
-    }
-  );
-  /* =========================
-   LOAD FINANCING RECORDS
-========================= */
-
-async function loadFinancingRecords() {
-
-  const list =
-    document.getElementById(
-      "financingRecordsList"
-    );
-
-  list.innerHTML =
-    "Loading financing records...";
-
-
-  try {
-
-    const snapshot =
-      await db
-        .collection("financingRecords")
-        .get();
-
-
-    if (snapshot.empty) {
-
-      list.innerHTML =
-        "<p>No financing records yet.</p>";
-
-      return;
-    }
-
-
-    list.innerHTML = "";
-
-
-    snapshot.forEach(function(doc) {
-
-      const data =
-        doc.data();
-
-
-      const card =
-        document.createElement("div");
-
-
-      card.className =
-        "feature-card";
-
-
-      const financingStatus =
-        data.financingStatus ||
-        "unknown";
-
-
-      const depositStatus =
-        data.depositStatus ||
-        "pending_verification";
-
-
-      const verifyButton =
-        depositStatus === "verified"
-          ? `
-            <p style="color:green;font-weight:bold;">
-              ✅ Deposit Verified
-            </p>
-          `
-          : `
-            <button
-              type="button"
-              class="primary-btn"
-              onclick="verifyDeposit('${doc.id}')"
-              style="margin-top:10px;"
-            >
-              💰 Verify Deposit
-            </button>
-          `;
-
-
-      card.innerHTML = `
-
-        <h3>
-          ${escapeHTML(
-            data.phoneBrand || ""
-          )}
-          ${escapeHTML(
-            data.phoneModel || ""
-          )}
-        </h3>
-
-        <p>
-          <strong>Customer ID:</strong>
-          ${escapeHTML(
-            data.customerId || doc.id
-          )}
-        </p>
-
-        <p>
-          <strong>IMEI:</strong>
-          ${escapeHTML(
-            data.imei || ""
-          )}
-        </p>
-
-        <p>
-          <strong>Selling Price:</strong>
-          ₦${Number(
-            data.sellingPrice || 0
-          ).toLocaleString()}
-        </p>
-
-        <p>
-          <strong>Deposit:</strong>
-          ₦${Number(
-            data.depositAmount || 0
-          ).toLocaleString()}
-        </p>
-
-        <p>
-          <strong>Remaining Balance:</strong>
-          ₦${Number(
-            data.remainingBalance || 0
-          ).toLocaleString()}
-        </p>
-
-        <p>
-          <strong>Weekly Payment:</strong>
-          ₦${Number(
-            data.weeklyPayment || 0
-          ).toLocaleString()}
-        </p>
-
-        <p>
-          <strong>Financing Status:</strong>
-          ${escapeHTML(
-            financingStatus
-          )}
-        </p>
-
-        <p>
-          <strong>Deposit Status:</strong>
-          ${escapeHTML(
-            depositStatus
-          )}
-        </p>
-        
-        ${verifyButton}
-
-${
-  depositStatus === "verified" &&
-  financingStatus === "active"
-    ? `
-      <button
-        type="button"
-        class="primary-btn"
-        onclick="generatePaymentSchedule('${doc.id}')"
-        style="margin-top:10px;"
-      >
-        📅 Generate Payment Schedule
-      </button>
-    `
-    : ""
-  
-  }
-      `;
-
-
-      list.appendChild(card);
-
-    });
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "FINANCING RECORD ERROR:",
-      error
-    );
-
-
-    list.innerHTML =
-      "<p style='color:red;'>" +
-      "❌ Could not load financing records.<br><br>" +
-      escapeHTML(
-        error.code || "unknown"
-      ) +
-      "<br>" +
-      escapeHTML(
-        error.message || "Unknown error"
-      ) +
-      "</p>";
-
-  }
-
-}
-
-
-/* =========================
-   VERIFY DEPOSIT
-========================= */
-
-async function verifyDeposit(
-  financingId
-) {
-
-  const confirmed =
-    confirm(
-      "Confirm that the customer's deposit has been received and verified?"
-    );
-
-
-  if (!confirmed) {
-    return;
-  }
-
-
-  const admin =
-    auth.currentUser;
-
-
-  if (!admin) {
-
-    alert(
-      "❌ Admin session expired. Please log in again."
-    );
-
-    return;
-  }
-
-
-  try {
-
-    await db
-      .collection("financingRecords")
-      .doc(financingId)
-      .update({
-
-        depositStatus:
-          "verified",
-
-        financingStatus:
-          "active",
-
-        depositVerifiedAt:
-          firebase.firestore
-            .FieldValue
-            .serverTimestamp(),
-
-        depositVerifiedBy:
-          admin.uid,
-
-        updatedAt:
-          firebase.firestore
-            .FieldValue
-            .serverTimestamp()
-
-      });
-
-
-    alert(
-      "✅ Deposit verified. Financing is now active."
-    );
-
-
-    await loadFinancingRecords();
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "DEPOSIT VERIFICATION ERROR:",
-      error
-    );
-
-
-    alert(
-      "❌ Deposit verification failed: " +
-      error.message
-    );
-
-  }
-
-      }
-  /* =========================
-   GENERATE PAYMENT SCHEDULE
-========================= */
- async function generatePaymentSchedule(financingId) {
-
-  const confirmed = confirm(
-    "Generate the weekly payment schedule for this financing plan?"
-  );
-
-  if (!confirmed) {
-    return;
-  }
-
-  const admin = auth.currentUser;
-
-  if (!admin) {
-    alert(
-      "❌ Admin session expired. Please log in again."
-    );
-    return;
-  }
-
-  try {
-
-    console.log("STEP 1 - Admin UID:", admin.uid);
-
-    const financingRef =
-      db.collection("financingRecords")
-        .doc(financingId);
-
-    console.log(
-      "STEP 2 - Reading financing record..."
-    );
-
-    const financingSnapshot =
-      await financingRef.get();
-
-    if (!financingSnapshot.exists) {
-      alert("❌ Financing record not found.");
-      return;
-    }
-
-    const financing =
-      financingSnapshot.data();
-
-    console.log(
-      "STEP 3 - Financing record loaded:",
-      financing
-    );
-
-    if (financing.depositStatus !== "verified") {
-      alert(
-        "❌ Deposit must be verified first."
-      );
-      return;
-    }
-
-    if (financing.financingStatus !== "active") {
-      alert(
-        "❌ Financing is not active."
-      );
-      return;
-    }
-
-    console.log(
-      "STEP 4 - Checking existing schedule..."
-    );
-
-    const existingSchedule =
-      await db
-        .collection("paymentSchedules")
-        .where(
-          "financingId",
-          "==",
-          financingId
-        )
-        .limit(1)
-        .get();
-
-    if (!existingSchedule.empty) {
-      alert(
-        "⚠️ A payment schedule already exists."
-      );
-      return;
-    }
-
-    console.log(
-      "STEP 5 - No existing schedule."
-    );
-
-    const weeklyPayment =
-      Number(financing.weeklyPayment || 0);
-
-    const numberOfWeeks =
-      Number(financing.numberOfWeeks || 0);
-
-    if (
-      weeklyPayment <= 0 ||
-      numberOfWeeks <= 0
-    ) {
-      alert(
-        "❌ Invalid weekly payment or number of weeks."
-      );
-      return;
-    }
-
-    console.log(
-      "STEP 6 - Creating schedule:",
-      numberOfWeeks,
-      "payments"
-    );
-
-    const batch =
-      db.batch();
-
-    const startDate =
-      new Date();
-
-    for (
-      let i = 1;
-      i <= numberOfWeeks;
-      i++
-    ) {
-
-      const dueDate =
-        new Date(startDate);
-
-      dueDate.setDate(
-        startDate.getDate() +
-        (i * 7)
+].forEach(
+  function(id) {
+
+    document
+      .getElementById(id)
+      .addEventListener(
+        "input",
+        calculateFinancing
       );
 
-      const paymentRef =
-        db
-          .collection("paymentSchedules")
-          .doc();
-
-      batch.set(
-        paymentRef,
-        {
-          financingId:
-            financingId,
-
-          customerId:
-            financing.customerId,
-
-          paymentNumber:
-            i,
-
-          amountDue:
-            weeklyPayment,
-
-          amountPaid:
-            0,
-
-          dueDate:
-            firebase.firestore
-              .Timestamp
-              .fromDate(dueDate),
-
-          status:
-            "pending",
-
-          paidAt:
-            null,
-
-          gracePeriodDays:
-            1,
-
-          overdue:
-            false,
-
-          createdAt:
-            firebase.firestore
-              .FieldValue
-              .serverTimestamp(),
-
-          createdBy:
-            admin.uid
-        }
-      );
-    }
-
-    console.log(
-      "STEP 7 - Updating financing record..."
-    );
-
-    batch.update(
-      financingRef,
-      {
-        paymentScheduleCreated:
-          true,
-
-        paymentScheduleCreatedAt:
-          firebase.firestore
-            .FieldValue
-            .serverTimestamp(),
-
-        paymentScheduleCreatedBy:
-          admin.uid,
-
-        currentPaymentNumber:
-          1,
-
-        updatedAt:
-          firebase.firestore
-            .FieldValue
-            .serverTimestamp()
-      }
-    );
-
-    console.log(
-      "STEP 8 - Committing batch..."
-    );
-
-    await batch.commit();
-
-    console.log(
-      "STEP 9 - SUCCESS"
-    );
-
-    alert(
-      "✅ Payment schedule created successfully."
-    );
-
-    await loadFinancingRecords();
-
   }
-
-  catch (error) {
-
-    console.error(
-      "PAYMENT SCHEDULE ERROR:",
-      error
-    );
-
-    alert(
-      "❌ Payment schedule failed.\n\n" +
-      "Error: " +
-      error.message +
-      "\n\n" +
-      "Check the browser console for the STEP where it stopped."
-    );
-
-  }
-
-  }
-
-
-  const confirmed = confirm(
-    "Generate the weekly payment schedule for this financing plan?"
-  );
-
-  if (!confirmed) {
-    return;
-  }
-
-  const admin = auth.currentUser;
-
-  if (!admin) {
-    alert(
-      "❌ Admin session expired. Please log in again."
-    );
-    return;
-  }
-
-  try {
-
-    const financingRef =
-      db.collection("financingRecords")
-        .doc(financingId);
-
-    const financingSnapshot =
-      await financingRef.get();
-
-    if (!financingSnapshot.exists) {
-      alert(
-        "❌ Financing record not found."
-      );
-      return;
-    }
-
-    const financing =
-      financingSnapshot.data();
-
-    /* =========================
-       SECURITY CHECKS
-    ========================= */
-
-    if (financing.depositStatus !== "verified") {
-
-      alert(
-        "❌ The deposit must be verified first."
-      );
-
-      return;
-    }
-
-    if (financing.financingStatus !== "active") {
-
-      alert(
-        "❌ Financing is not active."
-      );
-
-      return;
-    }
-
-    /* =========================
-       CHECK IF SCHEDULE EXISTS
-    ========================= */
-
-    const existingSchedule =
-      await db
-        .collection("paymentSchedules")
-        .where(
-          "financingId",
-          "==",
-          financingId
-        )
-        .limit(1)
-        .get();
-
-    if (!existingSchedule.empty) {
-
-      alert(
-        "⚠️ A payment schedule already exists for this financing plan."
-      );
-
-      return;
-    }
-
-    /* =========================
-       VALIDATE PLAN
-    ========================= */
-
-    const weeklyPayment =
-      Number(financing.weeklyPayment || 0);
-
-    const numberOfWeeks =
-      Number(financing.numberOfWeeks || 0);
-
-    if (
-      weeklyPayment <= 0 ||
-      numberOfWeeks <= 0
-    ) {
-
-      alert(
-        "❌ Invalid weekly payment or number of weeks."
-      );
-
-      return;
-    }
-
-    /* =========================
-       CREATE SCHEDULE
-    ========================= */
-
-    const batch =
-      db.batch();
-
-    const startDate =
-      new Date();
-
-    for (
-      let i = 1;
-      i <= numberOfWeeks;
-      i++
-    ) {
-
-      const dueDate =
-        new Date(startDate);
-
-      dueDate.setDate(
-        startDate.getDate() +
-        (i * 7)
-      );
-
-      const paymentRef =
-        db
-          .collection("paymentSchedules")
-          .doc();
-
-      batch.set(
-        paymentRef,
-        {
-
-          financingId:
-            financingId,
-
-          customerId:
-            financing.customerId,
-
-          paymentNumber:
-            i,
-
-          amountDue:
-            weeklyPayment,
-
-          amountPaid:
-            0,
-
-          dueDate:
-            firebase.firestore
-              .Timestamp
-              .fromDate(dueDate),
-
-          status:
-            "pending",
-
-          paidAt:
-            null,
-
-          gracePeriodDays:
-            1,
-
-          overdue:
-            false,
-
-          createdAt:
-            firebase.firestore
-              .FieldValue
-              .serverTimestamp(),
-
-          createdBy:
-            admin.uid
-
-        }
-      );
-    }
-
-    /* =========================
-       UPDATE FINANCING RECORD
-    ========================= */
-
-    batch.update(
-      financingRef,
-      {
-
-        paymentScheduleCreated:
-          true,
-
-        paymentScheduleCreatedAt:
-          firebase.firestore
-            .FieldValue
-            .serverTimestamp(),
-
-        paymentScheduleCreatedBy:
-          admin.uid,
-
-        currentPaymentNumber:
-          1,
-
-        updatedAt:
-          firebase.firestore
-            .FieldValue
-            .serverTimestamp()
-
-      }
-    );
-
-    await batch.commit();
-
-    alert(
-      "✅ Payment schedule created successfully."
-    );
-
-    await loadFinancingRecords();
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "PAYMENT SCHEDULE ERROR:",
-      error
-    );
-
-    alert(
-      "❌ Could not create payment schedule: " +
-      error.message
-    );
-
-  }
-
-    }
-/* =========================
-   HTML SECURITY
-========================= */
-
-function escapeHTML(value) {
-
-  return String(value)
-
-    .replace(/&/g, "&amp;")
-
-    .replace(/</g, "&lt;")
-
-    .replace(/>/g, "&gt;")
-
-    .replace(/"/g, "&quot;")
-
-    .replace(/'/g, "&#039;");
-
-}
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-function adminLogout() {
-
-  auth
-    .signOut()
-    .then(function() {
-
-      window.location.href =
-        "admin.html";
-
-    });
-
-}
-
-window.adminLogout = adminLogout;
-window.openFinancingForm = openFinancingForm;
-window.closeFinancingForm = closeFinancingForm;
-window.approveApplication = approveApplication;
-window.rejectApplication = rejectApplication;
-window.verifyDeposit = verifyDeposit;
-window.generatePaymentSchedule = generatePaymentSchedule;
-
-})(); 
-
-</script>
-
-</body>
-
-          </html>
-  
+);
