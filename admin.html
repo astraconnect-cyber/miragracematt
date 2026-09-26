@@ -1119,3 +1119,439 @@ function calculateFinancing() {
 
   }
 );
+
+  /* =========================
+   CREATE FINANCING RECORD
+========================= */
+
+document
+  .getElementById("financingForm")
+  .addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+      const message =
+        document.getElementById(
+          "financingMessage"
+        );
+
+      message.textContent =
+        "Creating financing plan...";
+
+      try {
+
+        const customerId =
+          document.getElementById(
+            "financingCustomerId"
+          ).value;
+
+        const sellingPrice =
+          Number(
+            document.getElementById(
+              "sellingPrice"
+            ).value
+          );
+
+        const deposit =
+          Number(
+            document.getElementById(
+              "depositAmount"
+            ).value
+          );
+
+        const weeklyPayment =
+          Number(
+            document.getElementById(
+              "weeklyPayment"
+            ).value
+          );
+
+        const numberOfWeeks =
+          Number(
+            document.getElementById(
+              "numberOfWeeks"
+            ).value
+          );
+
+        const financedAmount =
+          sellingPrice - deposit;
+
+        if (deposit > sellingPrice) {
+
+          message.textContent =
+            "❌ Deposit cannot be greater than selling price.";
+
+          return;
+        }
+
+        const user =
+          auth.currentUser;
+
+        if (!user) {
+
+          message.textContent =
+            "❌ Admin session expired. Please log in again.";
+
+          return;
+        }
+
+        await db
+          .collection("financingRecords")
+          .doc(customerId)
+          .set({
+
+            customerId:
+              customerId,
+
+            createdBy:
+              user.uid,
+
+            phoneBrand:
+              document.getElementById(
+                "phoneBrand"
+              ).value.trim(),
+
+            phoneModel:
+              document.getElementById(
+                "phoneModel"
+              ).value.trim(),
+
+            phoneStorage:
+              document.getElementById(
+                "phoneStorage"
+              ).value.trim(),
+
+            phoneColor:
+              document.getElementById(
+                "phoneColor"
+              ).value.trim(),
+
+            imei:
+              document.getElementById(
+                "phoneImei"
+              ).value.trim(),
+
+            serialNumber:
+              document.getElementById(
+                "phoneSerial"
+              ).value.trim(),
+
+            sellingPrice:
+              sellingPrice,
+
+            depositAmount:
+              deposit,
+
+            financedAmount:
+              financedAmount,
+
+            weeklyPayment:
+              weeklyPayment,
+
+            numberOfWeeks:
+              numberOfWeeks,
+
+            remainingBalance:
+              financedAmount,
+
+            financingStatus:
+              "pending_deposit",
+
+            depositStatus:
+              "pending_verification",
+
+            createdAt:
+              firebase.firestore.FieldValue.serverTimestamp(),
+
+            updatedAt:
+              firebase.firestore.FieldValue.serverTimestamp()
+
+          });
+
+        message.textContent =
+          "✅ Financing plan created successfully.";
+
+        document
+          .getElementById("financingForm")
+          .reset();
+
+        document
+          .getElementById("financingCustomerName")
+          .textContent = "";
+
+        await loadFinancingRecords();
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "FINANCING CREATION ERROR:",
+          error
+        );
+
+        message.textContent =
+          "❌ Financing creation failed: " +
+          error.message;
+
+      }
+
+    }
+  );
+
+
+/* =========================
+   LOAD FINANCING RECORDS
+========================= */
+
+async function loadFinancingRecords() {
+
+  const list =
+    document.getElementById(
+      "financingList"
+    );
+
+  if (!list) {
+    return;
+  }
+
+  list.innerHTML =
+    "Loading financing records...";
+
+  try {
+
+    const snapshot =
+      await db
+        .collection("financingRecords")
+        .get();
+
+    if (snapshot.empty) {
+
+      list.innerHTML =
+        "<p>No financing records yet.</p>";
+
+      return;
+    }
+
+    list.innerHTML = "";
+
+    snapshot.forEach(function(doc) {
+
+      const data =
+        doc.data();
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "feature-card";
+
+      card.innerHTML =
+        `
+        <h3>
+          📱 ${escapeHTML(
+            data.phoneBrand || ""
+          )}
+          ${escapeHTML(
+            data.phoneModel || ""
+          )}
+        </h3>
+
+        <p>
+          <strong>Customer ID:</strong>
+          ${escapeHTML(
+            data.customerId || ""
+          )}
+        </p>
+
+        <p>
+          <strong>Selling Price:</strong>
+          ₦${Number(
+            data.sellingPrice || 0
+          ).toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Deposit:</strong>
+          ₦${Number(
+            data.depositAmount || 0
+          ).toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Remaining Balance:</strong>
+          ₦${Number(
+            data.remainingBalance || 0
+          ).toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Weekly Payment:</strong>
+          ₦${Number(
+            data.weeklyPayment || 0
+          ).toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Weeks:</strong>
+          ${Number(
+            data.numberOfWeeks || 0
+          )}
+        </p>
+
+        <p>
+          <strong>Deposit Status:</strong>
+          ${escapeHTML(
+            data.depositStatus || ""
+          )}
+        </p>
+
+        <p>
+          <strong>Financing Status:</strong>
+          ${escapeHTML(
+            data.financingStatus || ""
+          )}
+        </p>
+
+        <div style="
+          display:flex;
+          gap:10px;
+          flex-wrap:wrap;
+          margin-top:15px;
+        ">
+
+          ${
+            data.depositStatus !== "verified"
+              ? `
+                <button
+                  class="primary-btn"
+                  type="button"
+                  onclick="verifyDeposit('${doc.id}')"
+                >
+                  ✅ Verify Deposit
+                </button>
+              `
+              : ""
+          }
+
+          ${
+            data.depositStatus === "verified" &&
+            data.financingStatus === "active" &&
+            !data.paymentScheduleCreated
+              ? `
+                <button
+                  class="primary-btn"
+                  type="button"
+                  onclick="generatePaymentSchedule('${doc.id}')"
+                >
+                  📅 Generate Payment Schedule
+                </button>
+              `
+              : ""
+          }
+
+        </div>
+        `;
+
+      list.appendChild(card);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "FINANCING LOAD ERROR:",
+      error
+    );
+
+    list.innerHTML =
+      "<p style='color:red;'>" +
+      "❌ Financing loading error:<br><br>" +
+      escapeHTML(
+        error.message || "Unknown error"
+      ) +
+      "</p>";
+
+  }
+
+}
+
+
+/* =========================
+   VERIFY DEPOSIT
+========================= */
+
+async function verifyDeposit(financingId) {
+
+  const confirmed =
+    confirm(
+      "Confirm that the customer's deposit has been received and verified?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  const admin =
+    auth.currentUser;
+
+  if (!admin) {
+
+    alert(
+      "❌ Admin session expired. Please log in again."
+    );
+
+    return;
+  }
+
+  try {
+
+    await db
+      .collection("financingRecords")
+      .doc(financingId)
+      .update({
+
+        depositStatus:
+          "verified",
+
+        financingStatus:
+          "active",
+
+        depositVerifiedAt:
+          firebase.firestore.FieldValue.serverTimestamp(),
+
+        depositVerifiedBy:
+          admin.uid,
+
+        updatedAt:
+          firebase.firestore.FieldValue.serverTimestamp()
+
+      });
+
+    alert(
+      "✅ Deposit verified. Financing is now active."
+    );
+
+    await loadFinancingRecords();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "DEPOSIT VERIFICATION ERROR:",
+      error
+    );
+
+    alert(
+      "❌ Deposit verification failed: " +
+      error.message
+    );
+
+  }
+
+  }
