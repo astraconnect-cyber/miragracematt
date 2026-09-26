@@ -366,20 +366,32 @@ const adminStatusElement =
 const adminMessage =
   document.getElementById("adminMessage");
 
-
 /* =========================
    ADMIN LOGIN
 ========================= */
 
 document
   .getElementById("adminLoginForm")
-  .addEventListener("submit", async function adminLogin(event) {
+  .addEventListener("submit", async function(event) {
 
     event.preventDefault();
 
+    const adminMessage =
+      document.getElementById("adminMessage");
+
+    const loginButton =
+      document.querySelector(
+        "#adminLoginForm button[type='submit']"
+      );
+
+    adminMessage.style.color = "";
     adminMessage.textContent =
       "Checking administrator account...";
 
+    if (loginButton) {
+      loginButton.disabled = true;
+      loginButton.textContent = "Checking...";
+    }
 
     try {
 
@@ -394,7 +406,6 @@ document
           .getElementById("adminPassword")
           .value;
 
-
       if (!email || !password) {
 
         adminMessage.textContent =
@@ -404,7 +415,9 @@ document
       }
 
 
-      /* FIREBASE AUTH LOGIN */
+      /* =========================
+         FIREBASE LOGIN
+      ========================= */
 
       const result =
         await auth.signInWithEmailAndPassword(
@@ -412,23 +425,21 @@ document
           password
         );
 
-
       const user =
         result.user;
-
 
       console.log(
         "Firebase login successful."
       );
 
       console.log(
-        "Logged-in UID:",
+        "Admin UID:",
         user.uid
       );
 
 
       /* =========================
-         GET ADMIN DOCUMENT
+         GET ADMIN RECORD
       ========================= */
 
       const adminDoc =
@@ -442,8 +453,11 @@ document
 
         await auth.signOut();
 
+        adminMessage.style.color =
+          "red";
+
         adminMessage.textContent =
-          "❌ No administrator record was found for this account.";
+          "❌ This Firebase account does not have an administrator record.";
 
         return;
       }
@@ -454,17 +468,19 @@ document
 
 
       /* =========================
-         READ STATUS SAFELY
+         CHECK ADMIN STATUS
       ========================= */
 
       const statusKey =
-        Object.keys(adminData).find(function(key) {
+        Object.keys(adminData).find(
+          function(key) {
 
-          return key
-            .trim()
-            .toLowerCase() === "status";
+            return key
+              .trim()
+              .toLowerCase() === "status";
 
-        });
+          }
+        );
 
 
       const currentAdminStatus =
@@ -472,27 +488,26 @@ document
           ? String(
               adminData[statusKey]
             )
-            .trim()
-            .toLowerCase()
+              .trim()
+              .toLowerCase()
           : "";
 
 
       console.log(
-        "STATUS FIELD:",
-        statusKey
-      );
-
-      console.log(
-        "STATUS VALUE:",
+        "Admin status:",
         currentAdminStatus
       );
 
 
-      /* CHECK ADMIN STATUS */
-
-      if (currentAdminStatus !== "active") {
+      if (
+        currentAdminStatus !==
+        "active"
+      ) {
 
         await auth.signOut();
+
+        adminMessage.style.color =
+          "red";
 
         adminMessage.textContent =
           "❌ Admin account is not active.";
@@ -501,7 +516,9 @@ document
       }
 
 
-      /* LOGIN SUCCESS */
+      /* =========================
+         LOGIN SUCCESS
+      ========================= */
 
       loginBox.style.display =
         "none";
@@ -519,9 +536,16 @@ document
 
       adminMessage.textContent =
         "";
-      
+
+
+      /* =========================
+         LOAD ADMIN DATA
+      ========================= */
+
       await loadApplications();
+
       await loadFinancingRecords();
+
     }
 
     catch (error) {
@@ -531,18 +555,78 @@ document
         error
       );
 
+      adminMessage.style.color =
+        "red";
 
-      adminMessage.textContent =
-        "❌ Error: " +
-        (error.code || "unknown") +
-        " — " +
-        (error.message || "Unknown error.");
+
+      /* FRIENDLIER FIREBASE ERRORS */
+
+      if (
+        error.code ===
+        "auth/invalid-credential"
+      ) {
+
+        adminMessage.textContent =
+          "❌ Incorrect email or password.";
+
+      }
+
+      else if (
+        error.code ===
+        "auth/user-not-found"
+      ) {
+
+        adminMessage.textContent =
+          "❌ No Firebase account exists with this email.";
+
+      }
+
+      else if (
+        error.code ===
+        "auth/wrong-password"
+      ) {
+
+        adminMessage.textContent =
+          "❌ Incorrect password.";
+
+      }
+
+      else if (
+        error.code ===
+        "auth/too-many-requests"
+      ) {
+
+        adminMessage.textContent =
+          "❌ Too many login attempts. Try again later.";
+
+      }
+
+      else {
+
+        adminMessage.textContent =
+          "❌ Login error: " +
+          (error.message ||
+            "Unknown error.");
+
+      }
+
+    }
+
+    finally {
+
+      if (loginButton) {
+
+        loginButton.disabled =
+          false;
+
+        loginButton.textContent =
+          "Admin Login";
+
+      }
 
     }
 
   });
-
-
 /* =========================
    LOAD APPLICATIONS
 ========================= */
