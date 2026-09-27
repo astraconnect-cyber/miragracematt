@@ -1789,7 +1789,32 @@ async function verifyDeposit(financingId) {
     );
 
 
-    await batch.commit();
+    try {
+
+  console.log("STEP 6A - Attempting payment schedule write...");
+
+  await batch.commit();
+
+  console.log("STEP 6B - Batch write successful.");
+
+} catch (writeError) {
+
+  console.error(
+    "BATCH WRITE ERROR:",
+    writeError
+  );
+
+  alert(
+    "❌ FIRESTORE WRITE PERMISSION ERROR\n\n" +
+    "Code: " +
+    writeError.code +
+    "\n\n" +
+    "Message: " +
+    writeError.message
+  );
+
+  return;
+  }
 
 
     console.log(
