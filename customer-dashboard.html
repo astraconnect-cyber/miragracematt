@@ -597,165 +597,113 @@ async function loadFinancing(customerId) {
 /* =========================
    LOAD PAYMENT SCHEDULE
 ========================= */
-
-
 async function loadPaymentSchedule(customerId) {
 
   const list =
-    document.getElementById(
-      "paymentScheduleList"
-    );
-
+    document.getElementById("paymentScheduleList");
 
   list.innerHTML =
-    `
-      <div class="loading-message">
-        Loading payment schedule...
-      </div>
-    `;
-
+    "<div class='loading-message'>Loading payment schedule...</div>";
 
   try {
 
-   const snapshot =
-  await db
-    .collection("paymentSchedules")
-    .where(
-      "customerId",
-      "==",
-      customerId
-    )
-    .get();
+    const snapshot =
+      await db
+        .collection("paymentSchedules")
+        .where("customerId", "==", customerId)
+        .get();
 
     if (snapshot.empty) {
 
       list.innerHTML =
-        `
-          <div class="empty-message">
-            Your weekly payment schedule has not been created yet.
-          </div>
-        `;
+        "<div class='empty-message'>" +
+        "Your weekly payment schedule has not been created yet." +
+        "</div>";
 
       return;
-
     }
 
 
+    /* PUT ALL PAYMENTS INTO AN ARRAY */
+
+    const payments = [];
+
+    snapshot.forEach(function(doc) {
+
+      payments.push({
+        id: doc.id,
+        data: doc.data()
+      });
+
+    });
+
+
+    /* SORT PAYMENT 1, 2, 3, 4... */
+
+    payments.sort(function(a, b) {
+
+      return Number(a.data.paymentNumber || 0) -
+             Number(b.data.paymentNumber || 0);
+
+    });
+
+
     let paidCount = 0;
-
     let pendingCount = 0;
-
     let overdueCount = 0;
-
     let nextPaymentFound = false;
 
 
     list.innerHTML = "";
 
 
-    snapshot.forEach(
-      function(doc) {
+    /* DISPLAY PAYMENTS IN ORDER */
 
-        const payment =
-          doc.data();
+    payments.forEach(function(paymentItem) {
 
-
-        const amountDue =
-          Number(
-            payment.amountDue || 0
-          );
+      const payment =
+        paymentItem.data;
 
 
-        const amountPaid =
-          Number(
-            payment.amountPaid || 0
-          );
+      const amountDue =
+        Number(payment.amountDue || 0);
 
 
-        let status =
-          payment.status ||
-          "pending";
+      const amountPaid =
+        Number(payment.amountPaid || 0);
 
 
-        /* =========================
-           DETERMINE STATUS
-        ========================= */
+      const status =
+        payment.status || "pending";
 
 
-        if (
-          status === "paid"
-        ) {
+      /* COUNT PAYMENTS */
 
-          paidCount++;
+      if (status === "paid") {
 
-        }
+        paidCount++;
 
-        else if (
-          status === "overdue"
-        ) {
+      }
 
-          overdueCount++;
+      else if (status === "overdue") {
 
-        }
+        overdueCount++;
 
-        else {
+      }
 
-          pendingCount++;
+      else {
 
-        }
+        pendingCount++;
+
+      }
 
 
-        /* =========================
-           NEXT PAYMENT
-        ========================= */
+      /* FIND NEXT PAYMENT */
 
-
-        if (
-          !nextPaymentFound &&
-          status !== "paid"
-        ) {
-
-          const dueDate =
-            payment.dueDate
-              ? payment.dueDate.toDate()
-              : null;
-
-
-          if (dueDate) {
-
-            document.getElementById(
-              "nextPayment"
-            ).textContent =
-              "₦" +
-              amountDue.toLocaleString() +
-              " — " +
-              formatDate(
-                dueDate
-              );
-
-          }
-
-          else {
-
-            document.getElementById(
-              "nextPayment"
-            ).textContent =
-              "₦" +
-              amountDue.toLocaleString();
-
-          }
-
-
-          nextPaymentFound =
-            true;
-
-        }
-
-
-        /* =========================
-           DATE
-        ========================= */
-
+      if (
+        !nextPaymentFound &&
+        status !== "paid"
+      ) {
 
         const dueDate =
           payment.dueDate
@@ -763,143 +711,157 @@ async function loadPaymentSchedule(customerId) {
             : null;
 
 
-        const formattedDate =
-          dueDate
-            ? formatDate(dueDate)
-            : "Not available";
+        if (dueDate) {
 
-
-        /* =========================
-           STATUS CLASS
-        ========================= */
-
-
-        let statusClass =
-          "status-default";
-
-
-        if (
-          status === "paid"
-        ) {
-
-          statusClass =
-            "status-paid";
+          document.getElementById(
+            "nextPayment"
+          ).textContent =
+            "₦" +
+            amountDue.toLocaleString() +
+            " — " +
+            formatDate(dueDate);
 
         }
 
-        else if (
-          status === "overdue"
-        ) {
+        else {
 
-          statusClass =
-            "status-overdue";
-
-        }
-
-        else if (
-          status === "pending"
-        ) {
-
-          statusClass =
-            "status-pending";
+          document.getElementById(
+            "nextPayment"
+          ).textContent =
+            "₦" +
+            amountDue.toLocaleString();
 
         }
 
 
-        /* =========================
-           CARD
-        ========================= */
-
-
-        const card =
-          document.createElement(
-            "div"
-          );
-
-
-        card.className =
-          "payment-card";
-
-
-        card.innerHTML = `
-
-          <h3>
-            Payment #${payment.paymentNumber}
-          </h3>
-
-          <div class="payment-row">
-
-            <span>
-              Amount Due
-            </span>
-
-            <strong>
-              ₦${amountDue.toLocaleString()}
-            </strong>
-
-          </div>
-
-
-          <div class="payment-row">
-
-            <span>
-              Amount Paid
-            </span>
-
-            <strong>
-              ₦${amountPaid.toLocaleString()}
-            </strong>
-
-          </div>
-
-
-          <div class="payment-row">
-
-            <span>
-              Due Date
-            </span>
-
-            <strong>
-              ${formattedDate}
-            </strong>
-
-          </div>
-
-
-          <div class="payment-row">
-
-            <span>
-              Status
-            </span>
-
-            <span
-              class="payment-status ${statusClass}"
-            >
-              ${formatStatus(status)}
-            </span>
-
-          </div>
-
-        `;
-
-
-        list.appendChild(
-          card
-        );
+        nextPaymentFound = true;
 
       }
-    );
 
 
-    /* =========================
-       SUMMARY
-    ========================= */
+      /* DATE */
 
+      const dueDate =
+        payment.dueDate
+          ? payment.dueDate.toDate()
+          : null;
+
+
+      const formattedDate =
+        dueDate
+          ? formatDate(dueDate)
+          : "Not available";
+
+
+      /* STATUS STYLE */
+
+      let statusClass =
+        "status-default";
+
+
+      if (status === "paid") {
+
+        statusClass =
+          "status-paid";
+
+      }
+
+      else if (status === "overdue") {
+
+        statusClass =
+          "status-overdue";
+
+      }
+
+      else if (status === "pending") {
+
+        statusClass =
+          "status-pending";
+
+      }
+
+
+      /* PAYMENT CARD */
+
+      const card =
+        document.createElement("div");
+
+
+      card.className =
+        "payment-card";
+
+
+      card.innerHTML = `
+
+        <h3>
+          Payment #${payment.paymentNumber}
+        </h3>
+
+        <div class="payment-row">
+
+          <span>
+            Amount Due
+          </span>
+
+          <strong>
+            ₦${amountDue.toLocaleString()}
+          </strong>
+
+        </div>
+
+
+        <div class="payment-row">
+
+          <span>
+            Amount Paid
+          </span>
+
+          <strong>
+            ₦${amountPaid.toLocaleString()}
+          </strong>
+
+        </div>
+
+
+        <div class="payment-row">
+
+          <span>
+            Due Date
+          </span>
+
+          <strong>
+            ${formattedDate}
+          </strong>
+
+        </div>
+
+
+        <div class="payment-row">
+
+          <span>
+            Status
+          </span>
+
+          <span class="payment-status ${statusClass}">
+            ${formatStatus(status)}
+          </span>
+
+        </div>
+
+      `;
+
+
+      list.appendChild(card);
+
+    });
+
+
+    /* SUMMARY */
 
     document.getElementById(
       "totalPayments"
     ).textContent =
-      snapshot.size;
+      payments.length;
 
 
     document.getElementById(
@@ -919,8 +881,6 @@ async function loadPaymentSchedule(customerId) {
     ).textContent =
       overdueCount;
 
-
-    /* NO NEXT PAYMENT */
 
     if (!nextPaymentFound) {
 
@@ -953,7 +913,8 @@ async function loadPaymentSchedule(customerId) {
 
   }
 
-}
+  }
+
 
 
 
