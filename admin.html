@@ -1425,3 +1425,478 @@ async function loadFinancingRecords() {
                 ">
                   ✅ Deposit Verified
   
+                </p>
+              `
+          }
+
+          ${
+            data.depositStatus === "verified" &&
+            data.financingStatus === "active" &&
+            !data.paymentScheduleCreated
+              ? `
+                <button
+                  type="button"
+                  class="primary-btn"
+                  onclick="generatePaymentSchedule('${doc.id}')"
+                >
+                  📅 Generate Payment Schedule
+                </button>
+              `
+              : ""
+          }
+
+        </div>
+      `;
+
+      list.appendChild(card);
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "FINANCING LOAD ERROR:",
+      error
+    );
+
+    list.innerHTML =
+      "<p style='color:red;'>" +
+      "❌ Financing loading error:<br><br>" +
+      escapeHTML(error.message || "Unknown error") +
+      "</p>";
+
+  }
+
+}
+
+/* =========================
+   VERIFY DEPOSIT
+========================= */
+
+async function verifyDeposit(financingId) {
+
+  const confirmed =
+    confirm(
+      "Confirm that the customer's deposit has been received and verified?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  const admin =
+    auth.currentUser;
+
+  if (!admin) {
+
+    alert(
+      "❌ Admin session expired. Please log in again."
+    );
+
+    return;
+  }
+
+  try {
+
+    await db
+      .collection("financingRecords")
+      .doc(financingId)
+      .update({
+
+        depositStatus:
+          "verified",
+
+        financingStatus:
+          "active",
+
+        depositVerifiedAt:
+          firebase.firestore.FieldValue.serverTimestamp(),
+
+        depositVerifiedBy:
+          admin.uid,
+
+        updatedAt:
+          firebase.firestore.FieldValue.serverTimestamp()
+
+      });
+
+    alert(
+      "✅ Deposit verified. Financing is now active."
+    );
+
+    await loadFinancingRecords();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "DEPOSIT VERIFICATION ERROR:",
+      error
+    );
+
+    alert(
+      "❌ Deposit verification failed: " +
+      error.message
+    );
+
+  }
+
+  }
+ /* =========================
+   GENERATE PAYMENT SCHEDULE
+========================= */
+
+  async function generatePaymentSchedule(financingId) {
+
+  const confirmed = confirm(
+    "Generate the weekly payment schedule for this financing plan?"
+  );
+
+  if (!confirmed) return;
+
+  const admin = auth.currentUser;
+
+  if (!admin) {
+    alert("❌ Admin session expired. Please log in again.");
+    return;
+  }
+
+  try {
+
+    console.log("STEP 1 - Admin UID:", admin.uid);
+
+    const financingRef =
+      db.collection("financingRecords").doc(financingId);
+
+    console.log("STEP 2 - Reading financing record...");
+
+    const financingSnapshot =
+      await financingRef.get();
+
+    if (!financingSnapshot.exists) {
+      alert("❌ Financing record not found.");
+      return;
+    }
+
+    const financing =
+      financingSnapshot.data();
+
+    console.log(
+      "STEP 3 - Financing record loaded:",
+      financing
+    );
+
+
+    /* =========================
+       CHECK DEPOSIT
+    ========================= */
+
+    if (financing.depositStatus !== "verified") {
+
+      alert(
+        "❌ Deposit must be verified first."
+      );
+
+      return;
+    }
+
+
+    /* =========================
+       CHECK FINANCING STATUS
+    ========================= */
+
+    if (financing.financingStatus !== "active") {
+
+      alert(
+        "❌ Financing is not active."
+      );
+
+      return;
+    }
+
+
+    /* =========================
+       CHECK EXISTING SCHEDULE
+    ========================= */
+
+    if (financing.paymentScheduleCreated === true) {
+
+      alert(
+        "⚠️ A payment schedule already exists for this financing plan."
+      );
+
+      return;
+    }
+
+
+    console.log(
+      "STEP 4 - No existing schedule."
+    );
+
+
+    /* =========================
+       PAYMENT VALUES
+    ========================= */
+
+    const weeklyPayment =
+      Number(financing.weeklyPayment || 0);
+
+    const numberOfWeeks =
+      Number(financing.numberOfWeeks || 0);
+
+
+    if (
+      weeklyPayment <= 0 ||
+      numberOfWeeks <= 0
+    ) {
+
+      alert(
+        "❌ Invalid weekly payment or number of weeks."
+      );
+
+      return;
+    }
+
+
+    console.log(
+      "STEP 5 - Creating",
+      numberOfWeeks,
+      "payments."
+    );
+
+
+    /* =========================
+       CREATE WEEKLY PAYMENTS
+    ========================= */
+
+    const batch =
+      db.batch();
+
+    const startDate =
+      new Date();
+
+
+    for (
+      let i = 1;
+      i <= numberOfWeeks;
+      i++
+    ) {
+
+      const dueDate =
+        new Date(startDate);
+
+      dueDate.setDate(
+        startDate.getDate() +
+        (i * 7)
+      );
+
+
+      const paymentRef =
+        db
+          .collection("paymentSchedules")
+          .doc();
+
+
+      batch.set(
+        paymentRef,
+        {
+
+          financingId:
+            financingId,
+
+          customerId:
+            financing.customerId,
+
+          paymentNumber:
+            i,
+
+          amountDue:
+            weeklyPayment,
+
+          amountPaid:
+            0,
+
+          dueDate:
+            firebase.firestore.Timestamp.fromDate(
+              dueDate
+            ),
+
+          status:
+            "pending",
+
+          paidAt:
+            null,
+
+          gracePeriodDays:
+            1,
+
+          overdue:
+            false,
+
+          createdAt:
+            firebase.firestore.FieldValue.serverTimestamp(),
+
+          createdBy:
+            admin.uid
+
+        }
+      );
+    }
+
+
+    /* =========================
+       MARK SCHEDULE CREATED
+    ========================= */
+
+    batch.update(
+      financingRef,
+      {
+
+        paymentScheduleCreated:
+          true,
+
+        paymentScheduleCreatedAt:
+          firebase.firestore.FieldValue.serverTimestamp(),
+
+        paymentScheduleCreatedBy:
+          admin.uid,
+
+        currentPaymentNumber:
+          1,
+
+        updatedAt:
+          firebase.firestore.FieldValue.serverTimestamp()
+
+      }
+    );
+
+
+    console.log(
+      "STEP 6 - Committing batch..."
+    );
+
+
+    try {
+
+  console.log("STEP 6A - Attempting payment schedule write...");
+
+  await batch.commit();
+
+  console.log("STEP 6B - Batch write successful.");
+
+} catch (writeError) {
+
+  console.error(
+    "BATCH WRITE ERROR:",
+    writeError
+  );
+
+  alert(
+    "❌ FIRESTORE WRITE PERMISSION ERROR\n\n" +
+    "Code: " +
+    writeError.code +
+    "\n\n" +
+    "Message: " +
+    writeError.message
+  );
+
+  return;
+  }
+
+
+    console.log(
+      "STEP 7 - PAYMENT SCHEDULE CREATED"
+    );
+
+
+    alert(
+      "✅ Payment schedule created successfully."
+    );
+
+
+    await loadFinancingRecords();
+
+
+  } catch (error) {
+
+    console.error(
+      "PAYMENT SCHEDULE ERROR:",
+      error
+    );
+
+    alert(
+      "❌ Payment schedule failed.\n\n" +
+      "Error: " +
+      error.message
+    );
+  }
+    }
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value) {
+
+  return String(value || "")
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =========================
+   ADMIN LOGOUT
+========================= */
+
+async function adminLogout() {
+
+  try {
+
+    await auth.signOut();
+
+    window.location.href =
+      "admin.html";
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "LOGOUT ERROR:",
+      error
+    );
+
+    alert(
+      "Logout failed: " +
+      error.message
+    );
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
+  
