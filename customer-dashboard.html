@@ -617,20 +617,15 @@ async function loadPaymentSchedule(customerId) {
 
   try {
 
-    const snapshot =
-      await db
-        .collection("paymentSchedules")
-        .where(
-          "customerId",
-          "==",
-          customerId
-        )
-        .orderBy(
-          "paymentNumber",
-          "asc"
-        )
-        .get();
-
+   const snapshot =
+  await db
+    .collection("paymentSchedules")
+    .where(
+      "customerId",
+      "==",
+      customerId
+    )
+    .get();
 
     if (snapshot.empty) {
 
