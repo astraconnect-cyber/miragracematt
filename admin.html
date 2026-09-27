@@ -324,7 +324,7 @@
   </p>
 
 </footer>
-
+  
 
 <!-- FIREBASE -->
 
@@ -473,4 +473,480 @@ document
                 .trim()
                 .toLowerCase() === "status";
 
+  
+              }
+          );
+
+
+        const currentAdminStatus =
+          statusKey
+            ? String(
+                adminData[statusKey]
+              )
+                .trim()
+                .toLowerCase()
+            : "";
+
+
+        console.log(
+          "Admin status:",
+          currentAdminStatus
+        );
+
+
+        if (
+          currentAdminStatus !==
+          "active"
+        ) {
+
+          await auth.signOut();
+
+          adminMessage.style.color =
+            "red";
+
+          adminMessage.textContent =
+            "❌ Admin account is not active.";
+
+          return;
+        }
+
+
+        loginBox.style.display =
+          "none";
+
+        dashboard.style.display =
+          "block";
+
+        adminStatusElement.textContent =
+          "Administrator access verified.";
+
+        adminStatusElement.style.color =
+          "green";
+
+        adminMessage.textContent =
+          "";
+
+
+        await loadApplications();
+
+        await loadFinancingRecords();
+
+      }
+
+
+      catch (error) {
+
+        console.error(
+          "ADMIN LOGIN ERROR:",
+          error
+        );
+
+        adminMessage.style.color =
+          "red";
+
+
+        if (
+          error.code ===
+          "auth/invalid-credential"
+        ) {
+
+          adminMessage.textContent =
+            "❌ Incorrect email or password.";
+
+        }
+
+        else if (
+          error.code ===
+          "auth/user-not-found"
+        ) {
+
+          adminMessage.textContent =
+            "❌ No Firebase account exists with this email.";
+
+        }
+
+        else if (
+          error.code ===
+          "auth/wrong-password"
+        ) {
+
+          adminMessage.textContent =
+            "❌ Incorrect password.";
+
+        }
+
+        else if (
+          error.code ===
+          "auth/too-many-requests"
+        ) {
+
+          adminMessage.textContent =
+            "❌ Too many login attempts. Try again later.";
+
+        }
+
+        else {
+
+          adminMessage.textContent =
+            "❌ Login error: " +
+            (
+              error.message ||
+              "Unknown error."
+            );
+
+        }
+
+      }
+
+
+      finally {
+
+        loginButton.disabled =
+          false;
+
+        loginButton.textContent =
+          "Admin Login";
+
+      }
+
+    }
+  );
+
+
+/* =========================
+   LOAD APPLICATIONS
+========================= */
+
+async function loadApplications() {
+
+  const list =
+    document.getElementById(
+      "applicationsList"
+    );
+
+  list.innerHTML =
+    "Loading applications...";
+
+
+  try {
+
+    const snapshot =
+      await db
+        .collection("customerApplications")
+        .orderBy(
+          "submittedAt",
+          "desc"
+        )
+        .get();
+
+
+    if (snapshot.empty) {
+
+      list.innerHTML =
+        "<p>No customer applications yet.</p>";
+
+      return;
+    }
+
+
+    list.innerHTML = "";
+
+
+    snapshot.forEach(
+      function(doc) {
+
+        const data =
+          doc.data();
+
+
+        const card =
+          document.createElement("div");
+
+
+        card.className =
+          "feature-card";
+
+
+        const currentStatus =
+          data.applicationStatus ||
+          "submitted";
+
+
+        const financingButton =
+          currentStatus === "approved"
+            ? `
+              <button
+                class="primary-btn"
+                type="button"
+                onclick="openFinancingForm(
+                  '${doc.id}',
+                  '${escapeHTML(data.fullName || "")}'
+                )"
+                style="margin-top:10px;"
+              >
+                📱 Create Financing Plan
+              </button>
+            `
+            : "";
+
+
+        card.innerHTML =
+          `
+            ${financingButton}
+
+            <h3>
+              ${escapeHTML(
+                data.fullName ||
+                "Unknown Customer"
+              )}
+            </h3>
+
+            <p>
+              <strong>Phone:</strong>
+              ${escapeHTML(
+                data.phone || ""
+              )}
+            </p>
+
+            <p>
+              <strong>Email:</strong>
+              ${escapeHTML(
+                data.email || ""
+              )}
+            </p>
+
+            <p>
+              <strong>School:</strong>
+              ${escapeHTML(
+                data.school || ""
+              )}
+            </p>
+
+            <p>
+              <strong>Application:</strong>
+              <strong>
+                ${escapeHTML(
+                  currentStatus
+                )}
+              </strong>
+            </p>
+
+            <p>
+              <strong>Identity Verification:</strong>
+              ${escapeHTML(
+                data.identityVerificationStatus ||
+                ""
+              )}
+            </p>
+
+            <div style="
+              display:flex;
+              gap:10px;
+              flex-wrap:wrap;
+              margin-top:15px;
+            ">
+
+              <button
+                class="primary-btn"
+                type="button"
+                onclick="approveApplication('${doc.id}')"
+              >
+                🟢 Approve Application
+              </button>
+
+              <button
+                type="button"
+                onclick="rejectApplication('${doc.id}')"
+                style="
+                  background:#dc2626;
+                  color:white;
+                  border:none;
+                  padding:12px 18px;
+                  border-radius:8px;
+                  cursor:pointer;
+                  font-weight:bold;
+                "
+              >
+                🔴 Reject Application
+              </button>
+
+            </div>
+          `;
+
+
+        list.appendChild(card);
+
+      }
+    );
+
+  }
+
+
+  catch (error) {
+
+    console.error(
+      "APPLICATION ERROR:",
+      error
+    );
+
+
+    list.innerHTML =
+      "<p style='color:red;'>" +
+      "❌ Application loading error:<br><br>" +
+      escapeHTML(
+        error.code ||
+        "unknown"
+      ) +
+      "<br>" +
+      escapeHTML(
+        error.message ||
+        "Unknown error"
+      ) +
+      "</p>";
+
+  }
+
+}
+
+
+/* =========================
+   APPROVE APPLICATION
+========================= */
+
+async function approveApplication(
+  applicationId
+) {
+
+  const confirmed =
+    confirm(
+      "Approve this customer application?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    await db
+      .collection("customerApplications")
+      .doc(applicationId)
+      .update({
+
+        applicationStatus:
+          "approved",
+
+        updatedAt:
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp()
+
+      });
+
+
+    alert(
+      "✅ Application approved successfully."
+    );
+
+
+    await loadApplications();
+
+  }
+
+
+  catch (error) {
+
+    console.error(
+      "APPROVAL ERROR:",
+      error
+    );
+
+
+    alert(
+      "❌ Approval failed: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   REJECT APPLICATION
+========================= */
+
+async function rejectApplication(
+  applicationId
+) {
+
+  const confirmed =
+    confirm(
+      "Reject this customer application?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    await db
+      .collection("customerApplications")
+      .doc(applicationId)
+      .update({
+
+        applicationStatus:
+          "rejected",
+
+        updatedAt:
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp()
+
+      });
+
+
+    alert(
+      "❌ Application rejected."
+    );
+
+
+    await loadApplications();
+
+  }
+
+
+  catch (error) {
+
+    console.error(
+      "REJECTION ERROR:",
+      error
+    );
+
+
+    alert(
+      "❌ Rejection failed: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   FINANCING SETUP
+========================= */
+
+function openFinancingForm(
+  customerId,
+  customerName
+) {
+
+  document
   
