@@ -1416,69 +1416,66 @@ async function loadFinancingRecords() {
         </p>
 
         <div style="
-          display:flex;
-          gap:10px;
-          flex-wrap:wrap;
-          margin-top:15px;
-        ">
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:15px;
+">
 
-          ${
-            data.depositStatus !== "verified"
-              ? `
-                <button
-                  class="primary-btn"
-                  type="button"
-                  onclick="verifyDeposit('${doc.id}')"
-                >
-                  ✅ Verify Deposit
-                </button>
-              `
-              : ""
-          }
-
-          ${
-            data.depositStatus === "verified" &&
-            data.financingStatus === "active" &&
-            !data.paymentScheduleCreated
-              ? `
-                <button
-                  class="primary-btn"
-                  type="button"
-                  onclick="generatePaymentSchedule('${doc.id}')"
-                >
-                  📅 Generate Payment Schedule
-                </button>
-              `
-              : ""
-          }
-
-        </div>
-        `;
-
-      list.appendChild(card);
-
-    });
-
+  ${
+    data.depositStatus !== "verified"
+      ? `
+        <button
+          type="button"
+          class="primary-btn"
+          onclick="verifyDeposit('${doc.id}')"
+        >
+          💰 Verify Deposit
+        </button>
+      `
+      : `
+        <p
+          style="
+            color:green;
+            font-weight:bold;
+          "
+        >
+          ✅ Deposit Verified
+        </p>
+      `
   }
 
-  catch (error) {
-
-    console.error(
-      "FINANCING LOAD ERROR:",
-      error
-    );
-
-    list.innerHTML =
-      "<p style='color:red;'>" +
-      "❌ Financing loading error:<br><br>" +
-      escapeHTML(
-        error.message || "Unknown error"
-      ) +
-      "</p>";
-
+  ${
+    data.depositStatus === "verified" &&
+    data.financingStatus === "active" &&
+    !data.paymentScheduleCreated
+      ? `
+        <button
+          type="button"
+          class="primary-btn"
+          onclick="generatePaymentSchedule('${doc.id}')"
+        >
+          📅 Generate Payment Schedule
+        </button>
+      `
+      : ""
   }
 
-}
+  ${
+    data.paymentScheduleCreated
+      ? `
+        <button
+          type="button"
+          class="primary-btn"
+          onclick="viewPaymentTracker('${doc.id}')"
+        >
+          💳 Payment Tracking
+        </button>
+      `
+      : ""
+  }
+
+</div>
 
 
 /* =========================
