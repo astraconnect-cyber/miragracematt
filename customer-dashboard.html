@@ -2,15 +2,95 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>Customer Dashboard | Miragracematt</title>
 
   <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    .payment-schedule {
+      margin-top: 30px;
+    }
+
+    .payment-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 20px;
+      margin-top: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .payment-card h3 {
+      margin-top: 0;
+      color: #0b5cff;
+    }
+
+    .payment-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .payment-row:last-child {
+      border-bottom: none;
+    }
+
+    .payment-status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .status-pending {
+      background: #fff4cc;
+      color: #8a6500;
+    }
+
+    .status-paid {
+      background: #d9f7df;
+      color: #16752b;
+    }
+
+    .status-overdue {
+      background: #ffdede;
+      color: #b00020;
+    }
+
+    .status-default {
+      background: #eeeeee;
+      color: #444;
+    }
+
+    .loading-message {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .empty-message {
+      padding: 15px;
+      background: #f5f7fb;
+      border-radius: 10px;
+    }
+
+  </style>
+
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -19,21 +99,29 @@
   </div>
 
   <nav>
-    <a href="index.html">Home</a>
+
+    <a href="index.html">
+      Home
+    </a>
 
     <button onclick="logout()">
       Logout
     </button>
+
   </nav>
 
 </header>
 
 
+
 <main class="dashboard-container">
+
 
   <div class="dashboard-header">
 
-    <h1>Customer Dashboard</h1>
+    <h1>
+      Customer Dashboard
+    </h1>
 
     <p id="welcomeMessage">
       Loading your account...
@@ -42,63 +130,90 @@
   </div>
 
 
+
   <section class="dashboard-grid">
 
 
+    <!-- ACCOUNT -->
+
     <div class="dashboard-card">
 
-      <h2>Account</h2>
+      <h2>
+        Account
+      </h2>
 
       <p>
         <strong>Name:</strong>
-        <span id="customerName">Loading...</span>
+        <span id="customerName">
+          Loading...
+        </span>
       </p>
 
       <p>
         <strong>Email:</strong>
-        <span id="customerEmail">Loading...</span>
+        <span id="customerEmail">
+          Loading...
+        </span>
       </p>
 
       <p>
         <strong>Phone:</strong>
-        <span id="customerPhone">Loading...</span>
+        <span id="customerPhone">
+          Loading...
+        </span>
       </p>
 
       <p>
         <strong>Account Status:</strong>
-        <span id="accountStatus">Loading...</span>
+        <span id="accountStatus">
+          Loading...
+        </span>
       </p>
 
     </div>
 
 
 
+    <!-- FINANCING -->
+
     <div class="dashboard-card">
 
-      <h2>Financing</h2>
+      <h2>
+        Financing
+      </h2>
 
       <p>
         <strong>Status:</strong>
-        <span id="financingStatus">Not started</span>
+        <span id="financingStatus">
+          Not started
+        </span>
       </p>
 
       <p>
         <strong>Current Balance:</strong>
-        <span id="balance">₦0</span>
+        <span id="balance">
+          ₦0
+        </span>
       </p>
 
       <p>
         <strong>Next Payment:</strong>
-        <span id="nextPayment">Not available</span>
+        <span id="nextPayment">
+          Not available
+        </span>
       </p>
 
     </div>
 
 
 
+    <!-- APPLICATION -->
+
     <div class="dashboard-card">
 
-      <h2>Application</h2>
+      <h2>
+        Application
+      </h2>
 
       <p id="applicationStatus">
         You have not started a phone financing application yet.
@@ -112,27 +227,82 @@
 
 
 
+    <!-- PAYMENT SUMMARY -->
+
     <div class="dashboard-card">
 
-      <h2>Payments</h2>
+      <h2>
+        Payments
+      </h2>
 
       <p>
-        Your payment history will appear here once
-        your financing account becomes active.
+        <strong>Total Payments:</strong>
+        <span id="totalPayments">
+          0
+        </span>
       </p>
 
-      <button onclick="viewPayments()">
-        View Payments
-      </button>
+      <p>
+        <strong>Paid Payments:</strong>
+        <span id="paidPayments">
+          0
+        </span>
+      </p>
+
+      <p>
+        <strong>Pending Payments:</strong>
+        <span id="pendingPayments">
+          0
+        </span>
+      </p>
+
+      <p>
+        <strong>Overdue Payments:</strong>
+        <span id="overduePayments">
+          0
+        </span>
+      </p>
 
     </div>
 
 
   </section>
 
+
+
+  <!-- PAYMENT SCHEDULE -->
+
+  <section class="payment-schedule">
+
+    <div class="dashboard-card">
+
+      <h2>
+        📅 My Weekly Payment Schedule
+      </h2>
+
+      <p>
+        Your scheduled weekly payments are shown below.
+      </p>
+
+
+      <div id="paymentScheduleList">
+
+        <div class="loading-message">
+          Loading payment schedule...
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
 </main>
 
 
+
+<!-- FIREBASE -->
 
 <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js"></script>
 
@@ -143,98 +313,670 @@
 <script src="firebase-config.js"></script>
 
 
+
 <script>
+
 
 const firebaseApp =
   firebase.initializeApp(firebaseConfig);
 
+
 const auth =
   firebase.auth();
+
 
 const db =
   firebase.firestore();
 
 
 
-auth.onAuthStateChanged(async function(user) {
-
-  if (!user) {
-
-    window.location.href =
-      "login.html";
-
-    return;
-
-  }
+/* =========================
+   AUTHENTICATION
+========================= */
 
 
-  try {
+auth.onAuthStateChanged(
+  async function(user) {
 
-    const customerDoc =
-      await db.collection("customers")
-      .doc(user.uid)
-      .get();
+    if (!user) {
 
-
-    if (!customerDoc.exists) {
-
-      document.getElementById("welcomeMessage")
-        .textContent =
-        "Customer profile not found.";
+      window.location.href =
+        "login.html";
 
       return;
 
     }
 
 
-    const customer =
-      customerDoc.data();
+    try {
+
+      await loadCustomerDashboard(
+        user
+      );
+
+    }
+
+    catch(error) {
+
+      console.error(
+        "DASHBOARD ERROR:",
+        error
+      );
+
+      document.getElementById(
+        "welcomeMessage"
+      ).textContent =
+        "Unable to load your account.";
+
+    }
+
+  }
+);
 
 
-    document.getElementById("welcomeMessage")
-      .textContent =
-      "Welcome, " + customer.fullName;
+
+/* =========================
+   LOAD CUSTOMER DASHBOARD
+========================= */
 
 
-    document.getElementById("customerName")
-      .textContent =
-      customer.fullName || "Not provided";
+async function loadCustomerDashboard(user) {
+
+  const customerRef =
+    db
+      .collection("customers")
+      .doc(user.uid);
 
 
-    document.getElementById("customerEmail")
-      .textContent =
-      customer.email || user.email;
+  const customerDoc =
+    await customerRef.get();
 
 
-    document.getElementById("customerPhone")
-      .textContent =
-      customer.phone || "Not provided";
+  if (!customerDoc.exists) {
+
+    document.getElementById(
+      "welcomeMessage"
+    ).textContent =
+      "Customer profile not found.";
+
+    return;
+
+  }
 
 
-    document.getElementById("accountStatus")
-      .textContent =
-      customer.accountStatus || "Active";
+  const customer =
+    customerDoc.data();
 
 
-    document.getElementById("financingStatus")
-      .textContent =
-      customer.financingStatus || "Not started";
+  /* ACCOUNT INFORMATION */
 
+  document.getElementById(
+    "welcomeMessage"
+  ).textContent =
+    "Welcome, " +
+    (customer.fullName || "Customer");
+
+
+  document.getElementById(
+    "customerName"
+  ).textContent =
+    customer.fullName ||
+    "Not provided";
+
+
+  document.getElementById(
+    "customerEmail"
+  ).textContent =
+    customer.email ||
+    user.email ||
+    "Not provided";
+
+
+  document.getElementById(
+    "customerPhone"
+  ).textContent =
+    customer.phone ||
+    "Not provided";
+
+
+  document.getElementById(
+    "accountStatus"
+  ).textContent =
+    customer.accountStatus ||
+    "Active";
+
+
+  /* APPLICATION STATUS */
+
+  if (
+    customer.applicationStatus
+  ) {
+
+    document.getElementById(
+      "applicationStatus"
+    ).textContent =
+      "Application status: " +
+      customer.applicationStatus;
+
+  }
+
+
+  /* FINANCING */
+
+  await loadFinancing(
+    user.uid
+  );
+
+}
+
+
+
+/* =========================
+   LOAD FINANCING
+========================= */
+
+
+async function loadFinancing(customerId) {
+
+  const financingRef =
+    db
+      .collection("financingRecords")
+      .doc(customerId);
+
+
+  const financingDoc =
+    await financingRef.get();
+
+
+  if (!financingDoc.exists) {
+
+    document.getElementById(
+      "financingStatus"
+    ).textContent =
+      "Not started";
+
+
+    document.getElementById(
+      "balance"
+    ).textContent =
+      "₦0";
+
+
+    document.getElementById(
+      "nextPayment"
+    ).textContent =
+      "Not available";
+
+
+    document.getElementById(
+      "paymentScheduleList"
+    ).innerHTML =
+      `
+        <div class="empty-message">
+          No active financing plan found.
+        </div>
+      `;
+
+    return;
+
+  }
+
+
+  const financing =
+    financingDoc.data();
+
+
+  /* FINANCING STATUS */
+
+  document.getElementById(
+    "financingStatus"
+  ).textContent =
+    financing.financingStatus ||
+    "Unknown";
+
+
+  /* BALANCE */
+
+  document.getElementById(
+    "balance"
+  ).textContent =
+    "₦" +
+    Number(
+      financing.remainingBalance || 0
+    ).toLocaleString();
+
+
+  /* LOAD PAYMENT SCHEDULE */
+
+  await loadPaymentSchedule(
+    customerId
+  );
+
+}
+
+
+
+/* =========================
+   LOAD PAYMENT SCHEDULE
+========================= */
+
+
+async function loadPaymentSchedule(customerId) {
+
+  const list =
+    document.getElementById(
+      "paymentScheduleList"
+    );
+
+
+  list.innerHTML =
+    `
+      <div class="loading-message">
+        Loading payment schedule...
+      </div>
+    `;
+
+
+  try {
+
+    const snapshot =
+      await db
+        .collection("paymentSchedules")
+        .where(
+          "customerId",
+          "==",
+          customerId
+        )
+        .orderBy(
+          "paymentNumber",
+          "asc"
+        )
+        .get();
+
+
+    if (snapshot.empty) {
+
+      list.innerHTML =
+        `
+          <div class="empty-message">
+            Your weekly payment schedule has not been created yet.
+          </div>
+        `;
+
+      return;
+
+    }
+
+
+    let paidCount = 0;
+
+    let pendingCount = 0;
+
+    let overdueCount = 0;
+
+    let nextPaymentFound = false;
+
+
+    list.innerHTML = "";
+
+
+    snapshot.forEach(
+      function(doc) {
+
+        const payment =
+          doc.data();
+
+
+        const amountDue =
+          Number(
+            payment.amountDue || 0
+          );
+
+
+        const amountPaid =
+          Number(
+            payment.amountPaid || 0
+          );
+
+
+        let status =
+          payment.status ||
+          "pending";
+
+
+        /* =========================
+           DETERMINE STATUS
+        ========================= */
+
+
+        if (
+          status === "paid"
+        ) {
+
+          paidCount++;
+
+        }
+
+        else if (
+          status === "overdue"
+        ) {
+
+          overdueCount++;
+
+        }
+
+        else {
+
+          pendingCount++;
+
+        }
+
+
+        /* =========================
+           NEXT PAYMENT
+        ========================= */
+
+
+        if (
+          !nextPaymentFound &&
+          status !== "paid"
+        ) {
+
+          const dueDate =
+            payment.dueDate
+              ? payment.dueDate.toDate()
+              : null;
+
+
+          if (dueDate) {
+
+            document.getElementById(
+              "nextPayment"
+            ).textContent =
+              "₦" +
+              amountDue.toLocaleString() +
+              " — " +
+              formatDate(
+                dueDate
+              );
+
+          }
+
+          else {
+
+            document.getElementById(
+              "nextPayment"
+            ).textContent =
+              "₦" +
+              amountDue.toLocaleString();
+
+          }
+
+
+          nextPaymentFound =
+            true;
+
+        }
+
+
+        /* =========================
+           DATE
+        ========================= */
+
+
+        const dueDate =
+          payment.dueDate
+            ? payment.dueDate.toDate()
+            : null;
+
+
+        const formattedDate =
+          dueDate
+            ? formatDate(dueDate)
+            : "Not available";
+
+
+        /* =========================
+           STATUS CLASS
+        ========================= */
+
+
+        let statusClass =
+          "status-default";
+
+
+        if (
+          status === "paid"
+        ) {
+
+          statusClass =
+            "status-paid";
+
+        }
+
+        else if (
+          status === "overdue"
+        ) {
+
+          statusClass =
+            "status-overdue";
+
+        }
+
+        else if (
+          status === "pending"
+        ) {
+
+          statusClass =
+            "status-pending";
+
+        }
+
+
+        /* =========================
+           CARD
+        ========================= */
+
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+
+        card.className =
+          "payment-card";
+
+
+        card.innerHTML = `
+
+          <h3>
+            Payment #${payment.paymentNumber}
+          </h3>
+
+          <div class="payment-row">
+
+            <span>
+              Amount Due
+            </span>
+
+            <strong>
+              ₦${amountDue.toLocaleString()}
+            </strong>
+
+          </div>
+
+
+          <div class="payment-row">
+
+            <span>
+              Amount Paid
+            </span>
+
+            <strong>
+              ₦${amountPaid.toLocaleString()}
+            </strong>
+
+          </div>
+
+
+          <div class="payment-row">
+
+            <span>
+              Due Date
+            </span>
+
+            <strong>
+              ${formattedDate}
+            </strong>
+
+          </div>
+
+
+          <div class="payment-row">
+
+            <span>
+              Status
+            </span>
+
+            <span
+              class="payment-status ${statusClass}"
+            >
+              ${formatStatus(status)}
+            </span>
+
+          </div>
+
+        `;
+
+
+        list.appendChild(
+          card
+        );
+
+      }
+    );
+
+
+    /* =========================
+       SUMMARY
+    ========================= */
+
+
+    document.getElementById(
+      "totalPayments"
+    ).textContent =
+      snapshot.size;
+
+
+    document.getElementById(
+      "paidPayments"
+    ).textContent =
+      paidCount;
+
+
+    document.getElementById(
+      "pendingPayments"
+    ).textContent =
+      pendingCount;
+
+
+    document.getElementById(
+      "overduePayments"
+    ).textContent =
+      overdueCount;
+
+
+    /* NO NEXT PAYMENT */
+
+    if (!nextPaymentFound) {
+
+      document.getElementById(
+        "nextPayment"
+      ).textContent =
+        "All payments completed";
+
+    }
 
   }
 
   catch(error) {
 
-    console.error(error);
+    console.error(
+      "PAYMENT SCHEDULE ERROR:",
+      error
+    );
 
-    document.getElementById("welcomeMessage")
-      .textContent =
-      "Unable to load your account.";
+
+    list.innerHTML =
+      `
+        <div
+          class="empty-message"
+          style="color:red;"
+        >
+          ❌ Unable to load your payment schedule.
+        </div>
+      `;
 
   }
 
-});
+}
 
+
+
+/* =========================
+   FORMAT DATE
+========================= */
+
+
+function formatDate(date) {
+
+  return date.toLocaleDateString(
+    "en-NG",
+    {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    }
+  );
+
+}
+
+
+
+/* =========================
+   FORMAT STATUS
+========================= */
+
+
+function formatStatus(status) {
+
+  if (!status) {
+
+    return "Pending";
+
+  }
+
+
+  return status
+    .replace(
+      /_/g,
+      " "
+    )
+    .replace(
+      /\b\w/g,
+      function(letter) {
+        return letter.toUpperCase();
+      }
+    );
+
+}
+
+
+
+/* =========================
+   LOGOUT
+========================= */
 
 
 async function logout() {
@@ -250,12 +992,20 @@ async function logout() {
 
   catch(error) {
 
-    console.error(error);
+    console.error(
+      "LOGOUT ERROR:",
+      error
+    );
 
   }
 
 }
 
+
+
+/* =========================
+   APPLICATION
+========================= */
 
 
 function startApplication() {
@@ -266,16 +1016,8 @@ function startApplication() {
 }
 
 
-
-function viewPayments() {
-
-  alert(
-    "Payment history will be available when your financing account is active."
-  );
-
-}
-
 </script>
+
 
 </body>
 
