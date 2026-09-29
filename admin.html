@@ -1917,7 +1917,180 @@ async function adminLogout() {
 
 }
   async function viewPaymentTracker(financingId) {
-  alert("💳 Payment Tracking selected.\n\nFinancing ID: " + financingId);
+  const tracker = document.getElementById("paymentTracker");
+
+  if (!tracker) {
+    alert("❌ Payment tracker section not found.");
+    return;
+  }
+
+  tracker.style.display = "block";
+  tracker.innerHTML = "⏳ Loading payment information...";
+
+  try {
+    const snapshot = await db.collection("paymentSchedules")
+      .where("financingId", "==", financingId)
+      .get();
+
+    if (snapshot.empty) {
+      tracker.innerHTML = `
+        <h2>💳 Payment Tracking</h2>
+        <p>No payment schedule found for this financing plan.</p>
+      `;
+      return;
+    }
+
+    const payments = [];
+
+    snapshot.forEach(function(doc) {
+      payments.push(doc.data());
+    });
+
+    payments.sort(function(a, b) {
+      return Number(a.paymentNumber || 0) -
+             Number(b.paymentNumber || 0);
+    });
+
+    let totalDue = 0;
+    let totalPaid = 0;
+    let paidCount = 0;
+    let pendingCount = 0;
+    let overdueCount = 0;
+
+    payments.forEach(function(payment) {
+      totalDue += Number(payment.amountDue || 0);
+      totalPaid += Number(payment.amountPaid || 0);
+
+      if (payment.status === "paid") {
+        paidCount++;
+      } else if (payment.status === "overdue") {
+        overdueCount++;
+      } else {
+        pendingCount++;
+      }
+    });
+
+    const remainingBalance = Math.max(
+      totalDue - totalPaid,
+      0
+    );
+
+    let nextPayment = null;
+
+    for (let i = 0; i < payments.length; i++) {
+      if (payments[i].status !== "paid") {
+        nextPayment = payments[i];
+        break;
+      }
+    }
+
+    let historyHTML = "";
+
+    payments.forEach(function(payment) {
+      const amountDue = Number(payment.amountDue || 0);
+      const amountPaid = Number(payment.amountPaid || 0);
+
+      historyHTML += `
+        <div class="payment-card">
+          <h3>Payment #${payment.paymentNumber}</h3>
+
+          <p>
+            <strong>Amount Due:</strong>
+            ₦${amountDue.toLocaleString()}
+          </p>
+
+          <p>
+            <strong>Amount Paid:</strong>
+            ₦${amountPaid.toLocaleString()}
+          </p>
+
+          <p>
+            <strong>Status:</strong>
+            ${payment.status || "pending"}
+          </p>
+        </div>
+      `;
+    });
+
+    tracker.innerHTML = `
+      <h2>💳 Payment Tracking</h2>
+
+      <div class="feature-card">
+
+        <h3>Payment Summary</h3>
+
+        <p>
+          <strong>Total Due:</strong>
+          ₦${totalDue.toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Total Paid:</strong>
+          ₦${totalPaid.toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Remaining Balance:</strong>
+          ₦${remainingBalance.toLocaleString()}
+        </p>
+
+        <p>
+          <strong>Paid Payments:</strong>
+          ${paidCount}
+        </p>
+
+        <p>
+          <strong>Pending Payments:</strong>
+          ${pendingCount}
+        </p>
+
+        <p>
+          <strong>Overdue Payments:</strong>
+          ${overdueCount}
+        </p>
+
+        <p>
+          <strong>Next Payment:</strong>
+          ${
+            nextPayment
+              ? "₦" +
+                Number(nextPayment.amountDue || 0)
+                  .toLocaleString()
+              : "All payments completed"
+          }
+        </p>
+
+      </div>
+
+      <h3>📋 Payment History</h3>
+
+      ${historyHTML}
+    `;
+
+    tracker.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  } catch (error) {
+
+    console.error(
+      "PAYMENT TRACKER ERROR:",
+      error
+    );
+
+    tracker.innerHTML = `
+      <h2>💳 Payment Tracking</h2>
+
+      <p style="color:red;">
+        ❌ Unable to load payment information.
+      </p>
+
+      <p>
+        ${error.message}
+      </p>
+    `;
+  }
   }
 
 </script>
