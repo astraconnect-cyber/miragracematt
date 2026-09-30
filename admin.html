@@ -2008,6 +2008,24 @@ async function adminLogout() {
             <strong>Status:</strong>
             ${payment.status || "pending"}
           </p>
+          ${
+  payment.status !== "paid"
+    ? `
+      <button
+        type="button"
+        class="primary-btn"
+        onclick="confirmPayment('${payment.paymentNumber}')"
+        style="margin-top:10px;"
+      >
+        💰 Mark Payment as Paid
+      </button>
+    `
+    : `
+      <p style="color:green;font-weight:bold;">
+        ✅ Payment Completed
+      </p>
+    `
+      }
         </div>
       `;
     });
