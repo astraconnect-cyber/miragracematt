@@ -2110,6 +2110,23 @@ async function adminLogout() {
     `;
   }
   }
+  async function confirmPayment(paymentNumber) {
+  const confirmed = confirm(
+    "Confirm that Payment #" +
+    paymentNumber +
+    " has been received?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  alert(
+    "💰 Payment #" +
+    paymentNumber +
+    " confirmed for recording."
+  );
+  }
 
 </script>
 
