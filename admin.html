@@ -2110,18 +2110,7 @@ async function adminLogout() {
     `;
   }
   }
-async function confirmPayment(financingId, paymentNumber) {
 
-  const confirmed = confirm(
-    "Confirm that Payment #" +
-    paymentNumber +
-    " has actually been received?\n\n" +
-    "This will record the payment in Firestore."
-  );
-
-  if (!confirmed) {
-    return;
-  }
 
   const admin = auth.currentUser;
 
