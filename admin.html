@@ -2177,7 +2177,7 @@ async function adminLogout() {
       currentBalance - amountDue,
       0
     );
-
+    const isFinalPayment = newBalance === 0;
     const batch = db.batch();
 
     batch.update(paymentRef, {
