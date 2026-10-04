@@ -1464,7 +1464,20 @@ async function loadFinancingRecords() {
       >
         💳 Payment Tracking
       </button>
+    `${
+  data.financingStatus === "awaiting_final_confirmation"
+    ? `
+      <button
+        type="button"
+        class="primary-btn"
+        onclick="confirmFullyPaid('${doc.id}')"
+        style="margin-top:10px;"
+      >
+        🔐 Confirm Fully Paid
+      </button>
     `
+    : ""
+  }
     : ""
              }
         </div>
