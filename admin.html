@@ -2236,7 +2236,84 @@ async function adminLogout() {
     );
   }
   }
+     async function confirmFullyPaid(financingId) {
 
+  const confirmed = confirm(
+    "Confirm that this financing plan is FULLY PAID?\n\n" +
+    "The remaining balance must be ₦0.\n\n" +
+    "This action does NOT automatically release the phone."
+  );
+
+  if (!confirmed) return;
+
+  const admin = auth.currentUser;
+
+  if (!admin) {
+    alert("❌ Admin session expired. Please log in again.");
+    return;
+  }
+
+  try {
+
+    const financingRef =
+      db.collection("financingRecords").doc(financingId);
+
+    const financingSnapshot =
+      await financingRef.get();
+
+    if (!financingSnapshot.exists) {
+      alert("❌ Financing record not found.");
+      return;
+    }
+
+    const financing = financingSnapshot.data();
+
+    const remainingBalance =
+      Number(financing.remainingBalance || 0);
+
+    if (remainingBalance !== 0) {
+      alert(
+        "❌ This financing plan is not fully paid.\n\n" +
+        "Remaining balance: ₦" +
+        remainingBalance.toLocaleString()
+      );
+      return;
+    }
+
+    if (financing.financingStatus === "fully_paid") {
+      alert("⚠️ This financing plan is already marked as fully paid.");
+      return;
+    }
+
+    await financingRef.update({
+      financingStatus: "fully_paid",
+      fullyPaidAt:
+        firebase.firestore.FieldValue.serverTimestamp(),
+      fullyPaidBy: admin.uid,
+      updatedAt:
+        firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert(
+      "✅ Financing plan confirmed as FULLY PAID.\n\n" +
+      "The phone has NOT been automatically released."
+    );
+
+    await loadFinancingRecords();
+
+  } catch (error) {
+
+    console.error(
+      "FULLY PAID CONFIRMATION ERROR:",
+      error
+    );
+
+    alert(
+      "❌ Could not confirm fully paid.\n\n" +
+      error.message
+    );
+  }
+     }
 </script>
 
 </body>
