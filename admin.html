@@ -1454,7 +1454,7 @@ async function loadFinancingRecords() {
               `
               : ""
           }
-             ${
+ ${
   data.paymentScheduleCreated
     ? `
       <button
@@ -1464,7 +1464,11 @@ async function loadFinancingRecords() {
       >
         💳 Payment Tracking
       </button>
-    `${
+    `
+    : ""
+}
+
+${
   data.financingStatus === "awaiting_final_confirmation"
     ? `
       <button
@@ -1478,8 +1482,6 @@ async function loadFinancingRecords() {
     `
     : ""
   }
-    : ""
-             }
         </div>
       `;
 
