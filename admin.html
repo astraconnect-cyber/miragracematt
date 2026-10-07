@@ -1467,6 +1467,19 @@ async function loadFinancingRecords() {
     `
     : ""
 }
+${
+  data.paymentScheduleCreated
+    ? `
+      <button
+        type="button"
+        class="primary-btn"
+        onclick="viewPaymentTracker('${doc.id}')"
+      >
+        💳 Payment Tracking
+      </button>
+    `
+    : ""
+}
 
 ${
   data.financingStatus === "awaiting_final_confirmation"
@@ -1481,7 +1494,7 @@ ${
       </button>
     `
     : ""
-  }
+            }
         </div>
       `;
 
